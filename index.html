@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instruksi Kerja Pemasangan Perangkat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -163,6 +165,7 @@
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
+            gap: 15px;
         }
         
         button {
@@ -172,6 +175,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            flex: 1;
         }
         
         .btn-submit {
@@ -190,6 +194,15 @@
         
         .btn-reset:hover {
             background-color: #c0392b;
+        }
+        
+        .btn-download {
+            background-color: #9b59b6;
+            color: white;
+        }
+        
+        .btn-download:hover {
+            background-color: #8e44ad;
         }
         
         .btn-capture {
@@ -230,12 +243,41 @@
             border-left: 4px solid #3498db;
         }
         
+        .download-section {
+            background-color: #e8f6f3;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .download-info {
+            margin-bottom: 15px;
+        }
+        
         footer {
             text-align: center;
             margin-top: 40px;
             padding: 20px;
             color: #7f8c8d;
             font-size: 14px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #2ecc71;
+            width: 0%;
+            transition: width 0.3s;
         }
         
         @media (max-width: 768px) {
@@ -503,10 +545,24 @@
             <div class="action-buttons">
                 <button type="button" class="btn-reset" onclick="resetForm()">Reset Semua</button>
                 <button type="button" class="btn-submit" onclick="submitForm()">Kirim Semua Data</button>
+                <button type="button" class="btn-download" onclick="downloadZip()" id="downloadBtn" disabled>Download ZIP</button>
             </div>
             
             <div id="statusMessage" class="status-message hidden"></div>
             <div id="folderInfo" class="folder-info hidden"></div>
+            
+            <div id="downloadSection" class="download-section hidden">
+                <h3>Download Berhasil!</h3>
+                <div class="download-info">
+                    <p>File ZIP berisi semua foto dan data telah berhasil dibuat.</p>
+                    <p>File: <strong id="zipFileName"></strong></p>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="zipProgress"></div>
+                </div>
+                <p>File akan otomatis terdownload. Jika tidak, klik tombol di bawah:</p>
+                <button type="button" class="btn-download" onclick="retryDownload()">Download Ulang ZIP</button>
+            </div>
         </form>
         
         <footer>
@@ -515,6 +571,14 @@
     </div>
 
     <script>
+        // Data untuk menyimpan informasi yang diperlukan
+        let formData = {
+            schoolName: '',
+            locations: {},
+            photos: {},
+            folderName: ''
+        };
+
         // Fungsi untuk memicu upload file
         function triggerUpload(inputId) {
             document.getElementById(inputId).click();
@@ -529,6 +593,13 @@
                     const preview = document.getElementById(previewId);
                     preview.src = e.target.result;
                     preview.classList.remove('hidden');
+                    
+                    // Simpan data foto
+                    const stepNumber = input.id.replace('photo', '');
+                    formData.photos[stepNumber] = {
+                        file: file,
+                        dataUrl: e.target.result
+                    };
                 }
                 reader.readAsDataURL(file);
             }
@@ -556,6 +627,14 @@
                                 </div>
                             </div>
                         `;
+                        
+                        // Simpan data lokasi
+                        const stepNumber = locationId.replace('location', '');
+                        formData.locations[stepNumber] = {
+                            lat: lat,
+                            lng: lng,
+                            timestamp: new Date().toISOString()
+                        };
                     },
                     function(error) {
                         alert('Gagal mengambil lokasi: ' + error.message);
@@ -586,32 +665,26 @@
                 // Sembunyikan pesan status
                 document.getElementById('statusMessage').classList.add('hidden');
                 document.getElementById('folderInfo').classList.add('hidden');
+                document.getElementById('downloadSection').classList.add('hidden');
+                
+                // Nonaktifkan tombol download
+                document.getElementById('downloadBtn').disabled = true;
+                
+                // Reset data
+                formData = {
+                    schoolName: '',
+                    locations: {},
+                    photos: {},
+                    folderName: ''
+                };
             }
         }
         
-        // Fungsi untuk membuat folder dan struktur data
-        function createSchoolFolder(schoolName) {
-            // Simulasi pembuatan folder (dalam implementasi nyata, ini akan menggunakan API server)
-            const folderName = schoolName.replace(/[^a-zA-Z0-9]/g, '_');
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const finalFolderName = `${folderName}_${timestamp}`;
-            
-            // Simulasi struktur folder
-            const folderStructure = {
-                name: finalFolderName,
-                subfolders: [
-                    '1_Plang_Sekolah',
-                    '2_PIC_dengan_Dus',
-                    '3_Kelengkapan_Perangkat',
-                    '4_Proses_Instalasi',
-                    '5_IMEI_SN',
-                    '6_Training',
-                    '7_BAPP_Halaman_1',
-                    '8_BAPP_Halaman_2'
-                ]
-            };
-            
-            return folderStructure;
+        // Fungsi untuk membuat nama folder
+        function createFolderName(schoolName) {
+            const cleanName = schoolName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+            return `Instalasi_${cleanName}_${timestamp}`;
         }
         
         // Fungsi untuk submit form
@@ -623,6 +696,8 @@
                 document.getElementById('schoolName').focus();
                 return;
             }
+            
+            formData.schoolName = schoolName;
             
             // Validasi sederhana
             let isValid = true;
@@ -652,37 +727,136 @@
             
             if (isValid) {
                 // Membuat folder sekolah
-                const folderStructure = createSchoolFolder(schoolName);
+                formData.folderName = createFolderName(schoolName);
                 
                 // Tampilkan informasi folder
                 const folderInfo = document.getElementById('folderInfo');
                 folderInfo.innerHTML = `
-                    <h3>Folder Berhasil Dibuat</h3>
-                    <p><strong>Nama Folder:</strong> ${folderStructure.name}</p>
-                    <p><strong>Struktur Folder:</strong></p>
-                    <ul>
-                        ${folderStructure.subfolders.map(folder => `<li>${folder}</li>`).join('')}
-                    </ul>
-                    <p>Semua foto dan data telah disimpan ke dalam folder tersebut.</p>
+                    <h3>Data Siap Didownload</h3>
+                    <p><strong>Nama Folder:</strong> ${formData.folderName}</p>
+                    <p>Semua data telah divalidasi dan siap untuk didownload dalam format ZIP.</p>
+                    <p>Klik tombol "Download ZIP" untuk mengunduh semua foto dan data.</p>
                 `;
                 folderInfo.classList.remove('hidden');
                 
-                statusMessage.textContent = 'Data berhasil dikirim dan folder sekolah telah dibuat!';
-                statusMessage.className = 'status-message success';
+                // Aktifkan tombol download
+                document.getElementById('downloadBtn').disabled = false;
                 
-                // Simulasi download folder (dalam implementasi nyata, ini akan menggunakan API server)
-                setTimeout(() => {
-                    alert(`Folder "${folderStructure.name}" berhasil dibuat dan data telah disimpan.`);
-                }, 1000);
+                statusMessage.textContent = 'Semua data telah divalidasi dan siap didownload!';
+                statusMessage.className = 'status-message success';
                 
             } else {
                 statusMessage.textContent = 'Harap lengkapi semua data yang diperlukan!';
                 statusMessage.className = 'status-message error';
                 document.getElementById('folderInfo').classList.add('hidden');
+                document.getElementById('downloadBtn').disabled = true;
             }
             
             // Scroll ke pesan status
             statusMessage.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Fungsi untuk membuat dan mendownload ZIP
+        async function downloadZip() {
+            if (!formData.folderName) {
+                alert('Harap kirim data terlebih dahulu sebelum download!');
+                return;
+            }
+            
+            const zip = new JSZip();
+            const folder = zip.folder(formData.folderName);
+            
+            // Buat subfolder untuk setiap langkah
+            const stepFolders = {
+                '1': '01_Plang_Sekolah',
+                '2': '02_PIC_dengan_Dus',
+                '3': '03_Kelengkapan_Perangkat',
+                '4': '04_Proses_Instalasi',
+                '5': '05_IMEI_SN',
+                '6': '06_Training',
+                '7': '07_BAPP_Halaman_1',
+                '8': '08_BAPP_Halaman_2'
+            };
+            
+            // Progress bar
+            const progressBar = document.getElementById('zipProgress');
+            let processedFiles = 0;
+            const totalFiles = Object.keys(formData.photos).length + Object.keys(formData.locations).length;
+            
+            // Tambahkan foto ke ZIP
+            for (const step in formData.photos) {
+                const stepFolder = folder.folder(stepFolders[step]);
+                const photoData = formData.photos[step];
+                
+                // Konversi data URL ke blob
+                const response = await fetch(photoData.dataUrl);
+                const blob = await response.blob();
+                
+                stepFolder.file(`foto_${step}.jpg`, blob);
+                
+                // Update progress
+                processedFiles++;
+                progressBar.style.width = `${(processedFiles / totalFiles) * 100}%`;
+            }
+            
+            // Tambahkan data lokasi
+            const locationData = {
+                sekolah: formData.schoolName,
+                timestamp: new Date().toISOString(),
+                lokasi: formData.locations
+            };
+            
+            folder.file('data_lokasi.json', JSON.stringify(locationData, null, 2));
+            
+            processedFiles++;
+            progressBar.style.width = `${(processedFiles / totalFiles) * 100}%`;
+            
+            // Tambahkan file README
+            const readmeContent = `
+INSTALASI PERANGKAT SEKOLAH
+===========================
+
+Nama Sekolah: ${formData.schoolName}
+Tanggal Instalasi: ${new Date().toLocaleDateString('id-ID')}
+
+STRUKTUR FOLDER:
+- 01_Plang_Sekolah: Foto plang sekolah dengan geo tagging
+- 02_PIC_dengan_Dus: Foto PIC bersama dus perangkat dengan geo tagging
+- 03_Kelengkapan_Perangkat: Foto kelengkapan perangkat dengan geo tagging
+- 04_Proses_Instalasi: Foto proses pemasangan dengan geo tagging
+- 05_IMEI_SN: Foto IMEI/Serial Number dengan geo tagging
+- 06_Training: Foto sesi training dengan geo tagging
+- 07_BAPP_Halaman_1: Foto BAPP halaman 1
+- 08_BAPP_Halaman_2: Foto BAPP halaman 2
+
+File data_lokasi.json berisi koordinat GPS dari setiap langkah pekerjaan.
+            `;
+            
+            folder.file('README.txt', readmeContent);
+            
+            // Generate ZIP
+            const zipFileName = `${formData.folderName}.zip`;
+            
+            zip.generateAsync({ type: 'blob' })
+            .then(function(content) {
+                // Simpan file ZIP
+                saveAs(content, zipFileName);
+                
+                // Tampilkan section download
+                document.getElementById('downloadSection').classList.remove('hidden');
+                document.getElementById('zipFileName').textContent = zipFileName;
+                
+                // Scroll ke section download
+                document.getElementById('downloadSection').scrollIntoView({ behavior: 'smooth' });
+            })
+            .catch(function(error) {
+                alert('Terjadi kesalahan saat membuat file ZIP: ' + error.message);
+            });
+        }
+        
+        // Fungsi untuk download ulang
+        function retryDownload() {
+            downloadZip();
         }
     </script>
 </body>
