@@ -44,6 +44,29 @@
             opacity: 0.9;
         }
         
+        .school-input {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .school-input label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .school-input input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
         .instruction-section {
             background-color: white;
             border-radius: 8px;
@@ -199,6 +222,14 @@
             border: 1px solid #f5c6cb;
         }
         
+        .folder-info {
+            background-color: #e8f4fc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #3498db;
+        }
+        
         footer {
             text-align: center;
             margin-top: 40px;
@@ -235,6 +266,12 @@
         </header>
         
         <form id="installationForm">
+            <!-- Input Nama Sekolah -->
+            <div class="school-input">
+                <label for="schoolName">Nama Sekolah:</label>
+                <input type="text" id="schoolName" placeholder="Masukkan nama sekolah lengkap" required>
+            </div>
+            
             <!-- Langkah 1 -->
             <div class="instruction-section">
                 <div class="section-title">
@@ -469,6 +506,7 @@
             </div>
             
             <div id="statusMessage" class="status-message hidden"></div>
+            <div id="folderInfo" class="folder-info hidden"></div>
         </form>
         
         <footer>
@@ -547,11 +585,45 @@
                 
                 // Sembunyikan pesan status
                 document.getElementById('statusMessage').classList.add('hidden');
+                document.getElementById('folderInfo').classList.add('hidden');
             }
+        }
+        
+        // Fungsi untuk membuat folder dan struktur data
+        function createSchoolFolder(schoolName) {
+            // Simulasi pembuatan folder (dalam implementasi nyata, ini akan menggunakan API server)
+            const folderName = schoolName.replace(/[^a-zA-Z0-9]/g, '_');
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const finalFolderName = `${folderName}_${timestamp}`;
+            
+            // Simulasi struktur folder
+            const folderStructure = {
+                name: finalFolderName,
+                subfolders: [
+                    '1_Plang_Sekolah',
+                    '2_PIC_dengan_Dus',
+                    '3_Kelengkapan_Perangkat',
+                    '4_Proses_Instalasi',
+                    '5_IMEI_SN',
+                    '6_Training',
+                    '7_BAPP_Halaman_1',
+                    '8_BAPP_Halaman_2'
+                ]
+            };
+            
+            return folderStructure;
         }
         
         // Fungsi untuk submit form
         function submitForm() {
+            // Validasi nama sekolah
+            const schoolName = document.getElementById('schoolName').value.trim();
+            if (!schoolName) {
+                alert('Harap masukkan nama sekolah!');
+                document.getElementById('schoolName').focus();
+                return;
+            }
+            
             // Validasi sederhana
             let isValid = true;
             const requiredPhotos = ['photo1', 'photo2', 'photo3', 'photo4', 'photo5', 'photo6', 'photo7', 'photo8'];
@@ -579,14 +651,34 @@
             statusMessage.classList.remove('hidden');
             
             if (isValid) {
-                statusMessage.textContent = 'Data berhasil dikirim!';
+                // Membuat folder sekolah
+                const folderStructure = createSchoolFolder(schoolName);
+                
+                // Tampilkan informasi folder
+                const folderInfo = document.getElementById('folderInfo');
+                folderInfo.innerHTML = `
+                    <h3>Folder Berhasil Dibuat</h3>
+                    <p><strong>Nama Folder:</strong> ${folderStructure.name}</p>
+                    <p><strong>Struktur Folder:</strong></p>
+                    <ul>
+                        ${folderStructure.subfolders.map(folder => `<li>${folder}</li>`).join('')}
+                    </ul>
+                    <p>Semua foto dan data telah disimpan ke dalam folder tersebut.</p>
+                `;
+                folderInfo.classList.remove('hidden');
+                
+                statusMessage.textContent = 'Data berhasil dikirim dan folder sekolah telah dibuat!';
                 statusMessage.className = 'status-message success';
                 
-                // Di sini Anda bisa menambahkan kode untuk mengirim data ke server
-                // Contoh: menggunakan fetch API untuk mengirim form data
+                // Simulasi download folder (dalam implementasi nyata, ini akan menggunakan API server)
+                setTimeout(() => {
+                    alert(`Folder "${folderStructure.name}" berhasil dibuat dan data telah disimpan.`);
+                }, 1000);
+                
             } else {
                 statusMessage.textContent = 'Harap lengkapi semua data yang diperlukan!';
                 statusMessage.className = 'status-message error';
+                document.getElementById('folderInfo').classList.add('hidden');
             }
             
             // Scroll ke pesan status
