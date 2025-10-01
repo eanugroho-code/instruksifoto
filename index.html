@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instruksi Kerja Pemasangan Perangkat</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .instruction-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid #3498db;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .section-number {
+            background-color: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .requirements {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .requirements li {
+            margin-bottom: 8px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 15px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            background-color: #e8f4fc;
+        }
+        
+        .upload-icon {
+            font-size: 40px;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .upload-text {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .upload-hint {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .map-preview {
+            height: 200px;
+            background-color: #eee;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-submit {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-reset {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-capture {
+            background-color: #3498db;
+            color: white;
+            margin-top: 10px;
+        }
+        
+        .btn-capture:hover {
+            background-color: #2980b9;
+        }
+        
+        .status-message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .instruction-section {
+                padding: 15px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Instruksi Kerja Pemasangan Perangkat</h1>
+            <p class="subtitle">Ikuti langkah-langkah di bawah ini dengan teliti dan lengkapi semua persyaratan</p>
+        </header>
+        
+        <form id="installationForm">
+            <!-- Langkah 1 -->
+            <div class="instruction-section">
+                <div class="section-title">
+                    <div class="section-number">1</div>
+                    <h2>Foto Plang Sekolah</h2>
+                </div>
+                <p>Ambil foto plang sekolah yang jelas dan dapat terbaca dengan baik.</p>
+                <div class="requirements">
+                    <p><strong>Persyaratan:</strong></p>
+                    <ul>
+                        <li>Foto harus jelas dan terbaca</li>
+                        <li>Harus ada Geo Tagging / Gmaps</li>
+                    </ul>
+                </div>
+                
+                <div class="upload-area" onclick="triggerUpload('photo1')">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
+                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                </div>
+                <input type="file" id="photo1" class="hidden" accept="image/*" onchange="previewImage(this, 'preview1')">
+                <img id="preview1" class="preview-image hidden">
+                
+                <button type="button" class="btn-capture" onclick="captureLocation('location1')">Ambil Lokasi Saat Ini</button>
+                <div id="location1" class="map-preview">Lokasi belum diambil</div>
+            </div>
+            
+            <!-- Langkah 2 -->
+            <div class="instruction-section">
+                <div class="section-title">
+                    <div class="section-number">2</div>
+                    <h2>Foto PIC dengan Dus</h2>
+                </div>
+                <p>Ambil foto PIC (Person In Charge) bersama dengan dus perangkat.</p>
+                <div class="requirements">
+                    <p><strong>Persyaratan:</strong></p>
+                    <ul>
+                        <li>Wajib menunjukkan wajah PIC dengan jelas</li>
+                        <li>Dus perangkat harus terlihat utuh</li>
+                        <li>Harus ada Geo Tagging / Gmaps</li>
+                    </ul>
+                </div>
+                
+                <div class="upload-area" onclick="triggerUpload('photo2')">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
+                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                </div>
+                <input type="file" id="photo2" class="hidden" accept="image/*" onchange="previewImage(this, 'preview2')">
+                <img id="preview2" class="preview-image hidden">
+                
+                <button type="button" class="btn-capture" onclick="captureLocation('location2')">Ambil Lokasi Saat Ini</button>
+                <div id="location2" class="map-preview">Lokasi belum diambil</div>
+            </div>
+            
+            <!-- Langkah 3 -->
+            <div class="instruction-section">
+                <div class="section-title">
+                    <div class="section-number">3</div>
+                    <h2>Foto Kelengkapan Perangkat</h2>
+                </div>
+                <p>Ambil foto semua kelengkapan perangkat yang akan dipasang.</p>
+                <div class="requirements">
+                    <p><strong>Persyaratan:</strong></p>
+                    <ul>
+                        <li>Foto 3 kabel</li>
+                        <li>1 Remote</li>
+                        <li>Baterai</li>
+                        <li>2 Pen</li>
+                        <li>1 Buku panduan</li>
+                        <li>1 Buku garansi</li>
+                        <li>Harus ada Geo Tagging / Gmaps</li>
+                    </ul>
+                </div>
+                
+                <div class="upload-area" onclick="triggerUpload('photo3')">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
+                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                </div>
+                <input type="file" id="photo3" class="hidden" accept="image/*" onchange="previewImage(this, 'preview3')">
+                <img id="preview3" class="preview-image hidden">
+                
+                <button type="button" class="btn-capture" onclick="captureLocation('location3')">Ambil Lokasi Saat Ini</button>
+                <div id="location3" class="map-preview">Lokasi belum diambil</div>
+            </div>
+            
+            <!-- Langkah 4 -->
+            <div class="instruction-section">
+                <div class="section-title">
+                    <div class="section-number">4</div>
+                    <h2>Foto Proses Instalasi/Pemasangan</h2>
+                </div>
+                <p>Dokumentasikan proses instalasi atau pemasangan perangkat.</p>
+                <div class="requirements">
+                    <p><strong>Persyaratan:</strong></p>
+                    <ul>
+                        <li>Foto harus menunjukkan proses pemasangan</li>
+                        <li>Perangkat harus terlihat sedang dipasang</li>
+                        <li>Harus ada Geo Tagging / Gmaps</li>
+                    </ul>
+                </div>
+                
+                <div class="upload-area" onclick="triggerUpload('photo4')">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
+                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                </div>
+                <input type="file" id="photo4" class="hidden" accept="image/*" onchange="previewImage(this, 'preview4')">
+                <img id="preview4" class="preview-image hidden">
+                
+                <button type="button" class="btn-capture" onclick="captureLocation('location4')">Ambil Lokasi Saat Ini</button>
+                <div id="location4" class="map-preview">Lokasi belum diambil</div>
+            </div>
+            
+            <!-- Langkah 5 -->
+            <div class="instruction-section">
+                <div class="section-title">
+                    <div class="section-number">5</div>
+                    <h2>Foto IMEI / SN (Serial Number)</h2>
+                </div>
+                <p>Ambil foto IMEI atau Serial Number yang terletak di belakang TV.</p>
+                <div class="requirements">
+                    <p><strong>Persyaratan:</strong></p>
+                    <ul>
+                        <li>IMEI/SN harus terbaca dengan jelas</li>
+                        <li>Foto diambil dari belakang TV</li>
+                        <li>Harus ada Geo Tagging / Gmaps</li>
+                    </ul>
+                </div>
+                
+                <div class="upload-area" onclick="triggerUpload('photo5')">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
+                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                </div>
+                <input type="file" id="photo5" class="hidden" accept="image/*" onchange="previewImage(this, 'preview5')">
+                <img id="preview5" class="preview-image hidden">
+                
+                <button type="button" class="btn-capture" onclick="captureLocation('location5')">Ambil Lokasi Saat Ini</button>
+                <div id="location5" class="map-preview">Lokasi belum diambil</div>
+            </div>
+            
+            <!-- Langkah 6 -->
+            <div class="instruction-section">
+                <div class="section-title">
+                    <div class="section-number">6</div>
+                    <h2>Foto Training</h2>
+                </div>
+                <p>Ambil foto sesi training yang sedang berlangsung.</p>
+                <div class="requirements">
+                    <p><strong>Persyaratan:</strong></p>
+                    <ul>
+                        <li>Wajib menunjukkan Teach Buddy</li>
+                        <li>Teach Buddy harus terinstal di semua direktorat</li>
+                        <li>Harus ada Geo Tagging / Gmaps</li>
+                    </ul>
+                </div>
+                
+                <div class="upload-area" onclick="triggerUpload('photo6')">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
+                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                </div>
+                <input type="file" id="photo6" class="hidden" accept="image/*" onchange="previewImage(this, 'preview6')">
+                <img id="preview6" class="preview-image hidden">
+                
+                <button type="button" class="btn-capture" onclick="captureLocation('location6')">Ambil Lokasi Saat Ini</button>
+                <div id="location6" class="map-preview">Lokasi belum diambil</div>
+            </div>
+            
+            <!-- Langkah 7 -->
+            <div class="instruction-section">
+                <div class="section-title">
+                    <div class="section-number">7</div>
+                    <h2>Foto BAPP Halaman 1</h2>
+                </div>
+                <p>Ambil foto Berita Acara Pemeriksaan dan Penerimaan (BAPP) halaman 1.</p>
+                <div class="requirements">
+                    <p><strong>Persyaratan:</strong></p>
+                    <ul>
+                        <li>IMEI barcode ditempel</li>
+                        <li>Di conteng yang sesuai</li>
+                        <li>Bagian atas diisi semua</li>
+                        <li>Nama PIC/Kepala sekolah harus sama</li>
+                        <li>Wajib ada stempel dan tanda tangan</li>
+                        <li>Tidak menggunakan geo tagging / gmaps</li>
+                    </ul>
+                </div>
+                
+                <div class="upload-area" onclick="triggerUpload('photo7')">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
+                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                </div>
+                <input type="file" id="photo7" class="hidden" accept="image/*" onchange="previewImage(this, 'preview7')">
+                <img id="preview7" class="preview-image hidden">
+            </div>
+            
+            <!-- Langkah 8 -->
+            <div class="instruction-section">
+                <div class="section-title">
+                    <div class="section-number">8</div>
+                    <h2>Foto BAPP Halaman 2</h2>
+                </div>
+                <p>Ambil foto Berita Acara Pemeriksaan dan Penerimaan (BAPP) halaman 2.</p>
+                <div class="requirements">
+                    <p><strong>Persyaratan:</strong></p>
+                    <ul>
+                        <li>Di conteng</li>
+                        <li>Nama pelatihan diisi</li>
+                        <li>Media pelatihan diconteng di luar jaringan</li>
+                        <li>Coret "belum dapat diterima" dan "belum berada"</li>
+                        <li>Nama PIC/Kepala sekolah harus sama dengan halaman 1</li>
+                        <li>Wajib ada stempel dan tanda tangan</li>
+                        <li>Tidak menggunakan geo tagging / gmaps</li>
+                    </ul>
+                </div>
+                
+                <div class="upload-area" onclick="triggerUpload('photo8')">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
+                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                </div>
+                <input type="file" id="photo8" class="hidden" accept="image/*" onchange="previewImage(this, 'preview8')">
+                <img id="preview8" class="preview-image hidden">
+            </div>
+            
+            <div class="action-buttons">
+                <button type="button" class="btn-reset" onclick="resetForm()">Reset Semua</button>
+                <button type="button" class="btn-submit" onclick="submitForm()">Kirim Semua Data</button>
+            </div>
+            
+            <div id="statusMessage" class="status-message hidden"></div>
+        </form>
+        
+        <footer>
+            <p>© 2023 - Instruksi Kerja Pemasangan Perangkat</p>
+        </footer>
+    </div>
+
+    <script>
+        // Fungsi untuk memicu upload file
+        function triggerUpload(inputId) {
+            document.getElementById(inputId).click();
+        }
+        
+        // Fungsi untuk menampilkan preview gambar
+        function previewImage(input, previewId) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById(previewId);
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Fungsi untuk mengambil lokasi
+        function captureLocation(locationId) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        // Tampilkan lokasi di elemen
+                        const locationElement = document.getElementById(locationId);
+                        locationElement.innerHTML = `
+                            <div style="padding: 10px; text-align: center;">
+                                <div style="font-weight: bold; margin-bottom: 5px;">Lokasi berhasil diambil</div>
+                                <div style="font-size: 14px;">Lat: ${lat.toFixed(6)}</div>
+                                <div style="font-size: 14px;">Lng: ${lng.toFixed(6)}</div>
+                                <div style="margin-top: 10px;">
+                                    <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank" style="color: #3498db; text-decoration: none;">
+                                        Lihat di Google Maps
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    },
+                    function(error) {
+                        alert('Gagal mengambil lokasi: ' + error.message);
+                    }
+                );
+            } else {
+                alert('Browser tidak mendukung geolocation');
+            }
+        }
+        
+        // Fungsi untuk reset form
+        function resetForm() {
+            if (confirm('Apakah Anda yakin ingin mereset semua data?')) {
+                document.getElementById('installationForm').reset();
+                
+                // Sembunyikan semua preview gambar
+                const previews = document.querySelectorAll('.preview-image');
+                previews.forEach(preview => {
+                    preview.classList.add('hidden');
+                });
+                
+                // Reset lokasi
+                const locations = document.querySelectorAll('.map-preview');
+                locations.forEach(location => {
+                    location.innerHTML = 'Lokasi belum diambil';
+                });
+                
+                // Sembunyikan pesan status
+                document.getElementById('statusMessage').classList.add('hidden');
+            }
+        }
+        
+        // Fungsi untuk submit form
+        function submitForm() {
+            // Validasi sederhana
+            let isValid = true;
+            const requiredPhotos = ['photo1', 'photo2', 'photo3', 'photo4', 'photo5', 'photo6', 'photo7', 'photo8'];
+            
+            for (const photoId of requiredPhotos) {
+                const photoInput = document.getElementById(photoId);
+                if (!photoInput.files || photoInput.files.length === 0) {
+                    isValid = false;
+                    break;
+                }
+            }
+            
+            // Validasi lokasi untuk langkah 1-6
+            const requiredLocations = ['location1', 'location2', 'location3', 'location4', 'location5', 'location6'];
+            for (const locationId of requiredLocations) {
+                const locationElement = document.getElementById(locationId);
+                if (locationElement.innerHTML === 'Lokasi belum diambil') {
+                    isValid = false;
+                    break;
+                }
+            }
+            
+            // Tampilkan pesan status
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.classList.remove('hidden');
+            
+            if (isValid) {
+                statusMessage.textContent = 'Data berhasil dikirim!';
+                statusMessage.className = 'status-message success';
+                
+                // Di sini Anda bisa menambahkan kode untuk mengirim data ke server
+                // Contoh: menggunakan fetch API untuk mengirim form data
+            } else {
+                statusMessage.textContent = 'Harap lengkapi semua data yang diperlukan!';
+                statusMessage.className = 'status-message error';
+            }
+            
+            // Scroll ke pesan status
+            statusMessage.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
