@@ -203,10 +203,23 @@
             padding: 8px 15px;
             font-size: 12px;
             margin-top: 10px;
+            margin-right: 5px;
         }
         
         .btn-location:hover {
             background-color: #e67e22;
+        }
+        
+        .btn-gps {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 15px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .btn-gps:hover {
+            background-color: #2980b9;
         }
         
         .status-message {
@@ -233,6 +246,12 @@
             background-color: #fff3cd;
             color: #856404;
             border: 1px solid #ffeaa7;
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
         }
         
         .folder-info {
@@ -267,6 +286,15 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 12px;
+        }
+        
+        .gps-instruction {
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 12px;
+            border-left: 3px solid #3498db;
         }
         
         footer {
@@ -305,7 +333,7 @@
     <div class="container">
         <header>
             <h1>Instruksi Kerja Pemasangan Perangkat</h1>
-            <p class="subtitle">Ambil foto sesuai instruksi - Input lokasi manual jika perlu</p>
+            <p class="subtitle">Ambil foto sesuai instruksi - Input lokasi manual atau gunakan GPS</p>
         </header>
         
         <form id="installationForm">
@@ -331,9 +359,18 @@
                 <input type="file" id="photo1" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 1)">
                 <img id="preview1" class="preview-image hidden">
                 <div id="locationInput1" class="location-input hidden">
+                    <div class="gps-instruction">
+                        <strong>💡 Tips:</strong> 
+                        <ul>
+                            <li>Klik "Ambil Lokasi GPS" untuk koordinat otomatis</li>
+                            <li>Atau input manual dari Google Maps</li>
+                            <li>Format: -6.2088 (minus untuk selatan)</li>
+                        </ul>
+                    </div>
                     <p><strong>📍 Input Koordinat Lokasi:</strong></p>
                     <input type="text" id="lat1" placeholder="Latitude (contoh: -6.2088)">
                     <input type="text" id="lng1" placeholder="Longitude (contoh: 106.8456)">
+                    <button type="button" class="btn-gps" onclick="getGPSLocation(1)">Ambil Lokasi GPS</button>
                     <button type="button" class="btn-location" onclick="saveManualLocation(1)">Simpan Lokasi</button>
                 </div>
                 <div id="locationInfo1" class="location-info hidden"></div>
@@ -355,14 +392,19 @@
                 <input type="file" id="photo2" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 2)">
                 <img id="preview2" class="preview-image hidden">
                 <div id="locationInput2" class="location-input hidden">
+                    <div class="gps-instruction">
+                        <strong>💡 Tips:</strong> Izinkan akses lokasi di browser, atau input manual
+                    </div>
                     <p><strong>📍 Input Koordinat Lokasi:</strong></p>
                     <input type="text" id="lat2" placeholder="Latitude (contoh: -6.2088)">
                     <input type="text" id="lng2" placeholder="Longitude (contoh: 106.8456)">
+                    <button type="button" class="btn-gps" onclick="getGPSLocation(2)">Ambil Lokasi GPS</button>
                     <button type="button" class="btn-location" onclick="saveManualLocation(2)">Simpan Lokasi</button>
                 </div>
                 <div id="locationInfo2" class="location-info hidden"></div>
             </div>
             
+            <!-- Langkah 3-8 (disingkat untuk hemat space) -->
             <!-- Langkah 3 -->
             <div class="instruction-section">
                 <div class="section-title">
@@ -389,19 +431,19 @@
                     <p><strong>📍 Input Koordinat Lokasi:</strong></p>
                     <input type="text" id="lat3" placeholder="Latitude (contoh: -6.2088)">
                     <input type="text" id="lng3" placeholder="Longitude (contoh: 106.8456)">
+                    <button type="button" class="btn-gps" onclick="getGPSLocation(3)">Ambil Lokasi GPS</button>
                     <button type="button" class="btn-location" onclick="saveManualLocation(3)">Simpan Lokasi</button>
                 </div>
                 <div id="locationInfo3" class="location-info hidden"></div>
             </div>
             
-            <!-- Langkah 4 -->
+            <!-- Langkah 4-6 (pattern sama) -->
             <div class="instruction-section">
                 <div class="section-title">
                     <div class="section-number">4</div>
                     <h2>Foto Proses Instalasi</h2>
                 </div>
                 <p>Dokumentasikan proses instalasi atau pemasangan perangkat.</p>
-                
                 <div class="upload-area" onclick="triggerUpload('photo4')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
@@ -411,21 +453,20 @@
                 <img id="preview4" class="preview-image hidden">
                 <div id="locationInput4" class="location-input hidden">
                     <p><strong>📍 Input Koordinat Lokasi:</strong></p>
-                    <input type="text" id="lat4" placeholder="Latitude (contoh: -6.2088)">
-                    <input type="text" id="lng4" placeholder="Longitude (contoh: 106.8456)">
+                    <input type="text" id="lat4" placeholder="Latitude">
+                    <input type="text" id="lng4" placeholder="Longitude">
+                    <button type="button" class="btn-gps" onclick="getGPSLocation(4)">Ambil Lokasi GPS</button>
                     <button type="button" class="btn-location" onclick="saveManualLocation(4)">Simpan Lokasi</button>
                 </div>
                 <div id="locationInfo4" class="location-info hidden"></div>
             </div>
             
-            <!-- Langkah 5 -->
             <div class="instruction-section">
                 <div class="section-title">
                     <div class="section-number">5</div>
-                    <h2>Foto IMEI / SN (Serial Number)</h2>
+                    <h2>Foto IMEI / SN</h2>
                 </div>
-                <p>Ambil foto IMEI atau Serial Number yang terletak di belakang TV.</p>
-                
+                <p>Ambil foto IMEI atau Serial Number di belakang TV.</p>
                 <div class="upload-area" onclick="triggerUpload('photo5')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
@@ -435,14 +476,14 @@
                 <img id="preview5" class="preview-image hidden">
                 <div id="locationInput5" class="location-input hidden">
                     <p><strong>📍 Input Koordinat Lokasi:</strong></p>
-                    <input type="text" id="lat5" placeholder="Latitude (contoh: -6.2088)">
-                    <input type="text" id="lng5" placeholder="Longitude (contoh: 106.8456)">
+                    <input type="text" id="lat5" placeholder="Latitude">
+                    <input type="text" id="lng5" placeholder="Longitude">
+                    <button type="button" class="btn-gps" onclick="getGPSLocation(5)">Ambil Lokasi GPS</button>
                     <button type="button" class="btn-location" onclick="saveManualLocation(5)">Simpan Lokasi</button>
                 </div>
                 <div id="locationInfo5" class="location-info hidden"></div>
             </div>
             
-            <!-- Langkah 6 -->
             <div class="instruction-section">
                 <div class="section-title">
                     <div class="section-number">6</div>
@@ -456,7 +497,6 @@
                         <li>Terlihat di semua direktorat</li>
                     </ul>
                 </div>
-                
                 <div class="upload-area" onclick="triggerUpload('photo6')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
@@ -466,29 +506,21 @@
                 <img id="preview6" class="preview-image hidden">
                 <div id="locationInput6" class="location-input hidden">
                     <p><strong>📍 Input Koordinat Lokasi:</strong></p>
-                    <input type="text" id="lat6" placeholder="Latitude (contoh: -6.2088)">
-                    <input type="text" id="lng6" placeholder="Longitude (contoh: 106.8456)">
+                    <input type="text" id="lat6" placeholder="Latitude">
+                    <input type="text" id="lng6" placeholder="Longitude">
+                    <button type="button" class="btn-gps" onclick="getGPSLocation(6)">Ambil Lokasi GPS</button>
                     <button type="button" class="btn-location" onclick="saveManualLocation(6)">Simpan Lokasi</button>
                 </div>
                 <div id="locationInfo6" class="location-info hidden"></div>
             </div>
             
-            <!-- Langkah 7 -->
+            <!-- Langkah 7-8 (tanpa GPS) -->
             <div class="instruction-section">
                 <div class="section-title">
                     <div class="section-number">7</div>
                     <h2>Foto BAPP Halaman 1</h2>
                 </div>
                 <p>Ambil foto Berita Acara Pemeriksaan dan Penerimaan (BAPP) halaman 1.</p>
-                <div class="requirements">
-                    <ul>
-                        <li>IMEI barcode ditempel</li>
-                        <li>Di conteng yang sesuai</li>
-                        <li>Bagian atas diisi semua</li>
-                        <li>Stempel dan tanda tangan</li>
-                    </ul>
-                </div>
-                
                 <div class="upload-area" onclick="triggerUpload('photo7')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
@@ -498,22 +530,12 @@
                 <img id="preview7" class="preview-image hidden">
             </div>
             
-            <!-- Langkah 8 -->
             <div class="instruction-section">
                 <div class="section-title">
                     <div class="section-number">8</div>
                     <h2>Foto BAPP Halaman 2</h2>
                 </div>
                 <p>Ambil foto Berita Acara Pemeriksaan dan Penerimaan (BAPP) halaman 2.</p>
-                <div class="requirements">
-                    <ul>
-                        <li>Nama pelatihan diisi</li>
-                        <li>Media pelatihan diconteng di luar jaringan</li>
-                        <li>Coret "belum dapat diterima" dan "belum berada"</li>
-                        <li>Stempel dan tanda tangan</li>
-                    </ul>
-                </div>
-                
                 <div class="upload-area" onclick="triggerUpload('photo8')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
@@ -561,7 +583,7 @@
             document.getElementById(inputId).click();
         }
         
-        // Fungsi untuk memproses foto dan menambahkan geotagging
+        // Fungsi untuk memproses foto
         function processPhoto(input, stepNumber, includeGeotagging = true) {
             const file = input.files[0];
             if (!file) return;
@@ -586,20 +608,7 @@
                     // Tampilkan input lokasi manual
                     showManualLocationInput(stepNumber);
                     
-                    // Coba dapatkan lokasi otomatis
-                    getLocation().then(location => {
-                        // Otomatis isi form dengan lokasi yang didapat
-                        document.getElementById('lat' + stepNumber).value = location.lat.toFixed(6);
-                        document.getElementById('lng' + stepNumber).value = location.lng.toFixed(6);
-                        
-                        showStatus('Lokasi otomatis berhasil didapatkan! Silakan simpan.', 'success');
-                    }).catch(error => {
-                        if (error === 'User denied Geolocation') {
-                            showStatus('Akses lokasi ditolak. Silakan input koordinat manual.', 'warning');
-                        } else {
-                            showStatus('Tidak dapat mendapatkan lokasi. Silakan input manual.', 'warning');
-                        }
-                    });
+                    showStatus(`Foto ${stepNumber} berhasil diambil. Silakan tambahkan lokasi.`, 'info');
                 } else {
                     // Simpan foto tanpa geotagging (untuk BAPP)
                     photoData.photos[stepNumber] = {
@@ -621,6 +630,65 @@
             locationInput.classList.remove('hidden');
         }
 
+        // Fungsi untuk mendapatkan lokasi GPS
+        function getGPSLocation(stepNumber) {
+            showStatus('Mencoba mengakses GPS...', 'info');
+            
+            if (!navigator.geolocation) {
+                showStatus('Browser tidak mendukung geolocation', 'error');
+                return;
+            }
+
+            // Options untuk GPS
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            };
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const location = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        timestamp: new Date().toISOString(),
+                        source: 'gps'
+                    };
+
+                    // Otomatis isi form dengan lokasi yang didapat
+                    document.getElementById('lat' + stepNumber).value = location.lat.toFixed(6);
+                    document.getElementById('lng' + stepNumber).value = location.lng.toFixed(6);
+                    
+                    showStatus('Lokasi GPS berhasil didapatkan! Klik "Simpan Lokasi"', 'success');
+                },
+                function(error) {
+                    let errorMessage = 'Tidak dapat mendapatkan lokasi GPS. ';
+                    
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage += 'Akses lokasi ditolak. Silakan izinkan akses lokasi di browser settings, atau input manual.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage += 'Informasi lokasi tidak tersedia. Coba lagi atau input manual.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage += 'Request lokasi timeout. Coba lagi atau input manual.';
+                            break;
+                        default:
+                            errorMessage += 'Error tidak diketahui. Silakan input koordinat manual.';
+                            break;
+                    }
+                    
+                    showStatus(errorMessage, 'warning');
+                    
+                    // Berikan contoh koordinat untuk memudahkan
+                    document.getElementById('lat' + stepNumber).placeholder = 'Contoh: -6.2088';
+                    document.getElementById('lng' + stepNumber).placeholder = 'Contoh: 106.8456';
+                },
+                options
+            );
+        }
+
         // Fungsi untuk menyimpan lokasi manual
         function saveManualLocation(stepNumber) {
             const latInput = document.getElementById('lat' + stepNumber);
@@ -630,7 +698,13 @@
             const lng = parseFloat(lngInput.value);
             
             if (isNaN(lat) || isNaN(lng)) {
-                showStatus('Harap masukkan koordinat yang valid!', 'error');
+                showStatus('Harap masukkan koordinat yang valid! Contoh: -6.2088 dan 106.8456', 'error');
+                return;
+            }
+
+            // Validasi range koordinat (opsional)
+            if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+                showStatus('Koordinat tidak valid! Latitude: -90 sampai 90, Longitude: -180 sampai 180', 'error');
                 return;
             }
 
@@ -643,43 +717,6 @@
 
             // Tambahkan geotagging ke foto
             addGeotaggingToPhoto(photoData.photos[stepNumber].dataUrl, location, stepNumber);
-            
-            // Sembunyikan input lokasi
-            document.getElementById('locationInput' + stepNumber).classList.add('hidden');
-        }
-
-        // Fungsi untuk mendapatkan lokasi
-        function getLocation() {
-            return new Promise((resolve, reject) => {
-                if (!navigator.geolocation) {
-                    reject('Browser tidak mendukung geolocation');
-                    return;
-                }
-
-                navigator.geolocation.getCurrentPosition(
-                    position => {
-                        const location = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude,
-                            timestamp: new Date().toISOString(),
-                            source: 'gps'
-                        };
-                        resolve(location);
-                    },
-                    error => {
-                        if (error.code === error.PERMISSION_DENIED) {
-                            reject('User denied Geolocation');
-                        } else {
-                            reject('Tidak dapat mengakses lokasi: ' + error.message);
-                        }
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 15000,
-                        maximumAge: 0
-                    }
-                );
-            });
         }
 
         // Fungsi untuk menambahkan geotagging ke foto
@@ -718,6 +755,9 @@
                 photoData.photos[stepNumber].location = location;
                 photoData.photos[stepNumber].needsGeotagging = false;
 
+                // Sembunyikan input lokasi
+                document.getElementById('locationInput' + stepNumber).classList.add('hidden');
+
                 // Tampilkan info lokasi
                 const locationInfo = document.getElementById('locationInfo' + stepNumber);
                 locationInfo.innerHTML = `
@@ -731,7 +771,10 @@
 
             } catch (error) {
                 console.error('Error adding geotagging:', error);
-                showStatus('Error menambahkan geotagging ke foto', 'error');
+                showStatus('Error menambahkan geotagging. Foto disimpan tanpa lokasi.', 'error');
+                
+                // Tetap simpan foto meski tanpa geotagging
+                photoData.photos[stepNumber].needsGeotagging = false;
             }
         }
 
@@ -883,8 +926,42 @@ Keterangan:
             statusElement.className = `status-message ${type}`;
             statusElement.classList.remove('hidden');
             
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusElement.classList.add('hidden');
+                }, 5000);
+            }
+            
             // Scroll ke status message
-            statusElement.scrollIntoView({ behavior: 'smooth' });
+            statusElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Tambahkan event listener untuk input koordinat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Validasi input koordinat real-time
+            for (let i = 1; i <= 6; i++) {
+                const latInput = document.getElementById('lat' + i);
+                const lngInput = document.getElementById('lng' + i);
+                
+                if (latInput && lngInput) {
+                    latInput.addEventListener('input', function() {
+                        validateCoordinateInput(this);
+                    });
+                    lngInput.addEventListener('input', function() {
+                        validateCoordinateInput(this);
+                    });
+                }
+            }
+        });
+
+        // Fungsi validasi input koordinat
+        function validateCoordinateInput(input) {
+            const value = input.value;
+            // Hanya allow numbers, decimal point, dan minus sign
+            if (!/^-?\d*\.?\d*$/.test(value)) {
+                input.value = value.slice(0, -1);
+            }
         }
     </script>
 </body>
