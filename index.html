@@ -197,6 +197,18 @@
             background-color: #8e44ad;
         }
         
+        .btn-location {
+            background-color: #f39c12;
+            color: white;
+            padding: 8px 15px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .btn-location:hover {
+            background-color: #e67e22;
+        }
+        
         .status-message {
             padding: 10px;
             border-radius: 5px;
@@ -217,6 +229,12 @@
             border: 1px solid #f5c6cb;
         }
         
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
         .folder-info {
             background-color: #e8f4fc;
             border-radius: 8px;
@@ -232,6 +250,23 @@
             margin-top: 10px;
             font-size: 12px;
             border-left: 3px solid #ffc107;
+        }
+        
+        .location-input {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px dashed #ccc;
+        }
+        
+        .location-input input {
+            width: calc(50% - 10px);
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
         }
         
         footer {
@@ -259,6 +294,10 @@
                 width: 100%;
                 margin-bottom: 10px;
             }
+            
+            .location-input input {
+                width: calc(100% - 10px);
+            }
         }
     </style>
 </head>
@@ -266,7 +305,7 @@
     <div class="container">
         <header>
             <h1>Instruksi Kerja Pemasangan Perangkat</h1>
-            <p class="subtitle">Ambil foto sesuai instruksi - GeoTagging otomatis akan disematkan</p>
+            <p class="subtitle">Ambil foto sesuai instruksi - Input lokasi manual jika perlu</p>
         </header>
         
         <form id="installationForm">
@@ -287,10 +326,16 @@
                 <div class="upload-area" onclick="triggerUpload('photo1')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
+                    <div class="upload-hint">Lokasi akan diminta setelah foto diambil</div>
                 </div>
                 <input type="file" id="photo1" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 1)">
                 <img id="preview1" class="preview-image hidden">
+                <div id="locationInput1" class="location-input hidden">
+                    <p><strong>📍 Input Koordinat Lokasi:</strong></p>
+                    <input type="text" id="lat1" placeholder="Latitude (contoh: -6.2088)">
+                    <input type="text" id="lng1" placeholder="Longitude (contoh: 106.8456)">
+                    <button type="button" class="btn-location" onclick="saveManualLocation(1)">Simpan Lokasi</button>
+                </div>
                 <div id="locationInfo1" class="location-info hidden"></div>
             </div>
             
@@ -305,10 +350,16 @@
                 <div class="upload-area" onclick="triggerUpload('photo2')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
+                    <div class="upload-hint">Lokasi akan diminta setelah foto diambil</div>
                 </div>
                 <input type="file" id="photo2" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 2)">
                 <img id="preview2" class="preview-image hidden">
+                <div id="locationInput2" class="location-input hidden">
+                    <p><strong>📍 Input Koordinat Lokasi:</strong></p>
+                    <input type="text" id="lat2" placeholder="Latitude (contoh: -6.2088)">
+                    <input type="text" id="lng2" placeholder="Longitude (contoh: 106.8456)">
+                    <button type="button" class="btn-location" onclick="saveManualLocation(2)">Simpan Lokasi</button>
+                </div>
                 <div id="locationInfo2" class="location-info hidden"></div>
             </div>
             
@@ -330,10 +381,16 @@
                 <div class="upload-area" onclick="triggerUpload('photo3')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
+                    <div class="upload-hint">Lokasi akan diminta setelah foto diambil</div>
                 </div>
                 <input type="file" id="photo3" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 3)">
                 <img id="preview3" class="preview-image hidden">
+                <div id="locationInput3" class="location-input hidden">
+                    <p><strong>📍 Input Koordinat Lokasi:</strong></p>
+                    <input type="text" id="lat3" placeholder="Latitude (contoh: -6.2088)">
+                    <input type="text" id="lng3" placeholder="Longitude (contoh: 106.8456)">
+                    <button type="button" class="btn-location" onclick="saveManualLocation(3)">Simpan Lokasi</button>
+                </div>
                 <div id="locationInfo3" class="location-info hidden"></div>
             </div>
             
@@ -348,10 +405,16 @@
                 <div class="upload-area" onclick="triggerUpload('photo4')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
+                    <div class="upload-hint">Lokasi akan diminta setelah foto diambil</div>
                 </div>
                 <input type="file" id="photo4" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 4)">
                 <img id="preview4" class="preview-image hidden">
+                <div id="locationInput4" class="location-input hidden">
+                    <p><strong>📍 Input Koordinat Lokasi:</strong></p>
+                    <input type="text" id="lat4" placeholder="Latitude (contoh: -6.2088)">
+                    <input type="text" id="lng4" placeholder="Longitude (contoh: 106.8456)">
+                    <button type="button" class="btn-location" onclick="saveManualLocation(4)">Simpan Lokasi</button>
+                </div>
                 <div id="locationInfo4" class="location-info hidden"></div>
             </div>
             
@@ -366,10 +429,16 @@
                 <div class="upload-area" onclick="triggerUpload('photo5')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
+                    <div class="upload-hint">Lokasi akan diminta setelah foto diambil</div>
                 </div>
                 <input type="file" id="photo5" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 5)">
                 <img id="preview5" class="preview-image hidden">
+                <div id="locationInput5" class="location-input hidden">
+                    <p><strong>📍 Input Koordinat Lokasi:</strong></p>
+                    <input type="text" id="lat5" placeholder="Latitude (contoh: -6.2088)">
+                    <input type="text" id="lng5" placeholder="Longitude (contoh: 106.8456)">
+                    <button type="button" class="btn-location" onclick="saveManualLocation(5)">Simpan Lokasi</button>
+                </div>
                 <div id="locationInfo5" class="location-info hidden"></div>
             </div>
             
@@ -391,10 +460,16 @@
                 <div class="upload-area" onclick="triggerUpload('photo6')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
+                    <div class="upload-hint">Lokasi akan diminta setelah foto diambil</div>
                 </div>
                 <input type="file" id="photo6" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 6)">
                 <img id="preview6" class="preview-image hidden">
+                <div id="locationInput6" class="location-input hidden">
+                    <p><strong>📍 Input Koordinat Lokasi:</strong></p>
+                    <input type="text" id="lat6" placeholder="Latitude (contoh: -6.2088)">
+                    <input type="text" id="lng6" placeholder="Longitude (contoh: 106.8456)">
+                    <button type="button" class="btn-location" onclick="saveManualLocation(6)">Simpan Lokasi</button>
+                </div>
                 <div id="locationInfo6" class="location-info hidden"></div>
             </div>
             
@@ -500,29 +575,77 @@
                 preview.classList.remove('hidden');
 
                 if (includeGeotagging) {
-                    // Dapatkan lokasi dan tambahkan geotagging
+                    // Simpan foto sementara tanpa geotagging
+                    photoData.photos[stepNumber] = {
+                        dataUrl: e.target.result,
+                        location: null,
+                        fileName: photoNames[stepNumber],
+                        needsGeotagging: true
+                    };
+
+                    // Tampilkan input lokasi manual
+                    showManualLocationInput(stepNumber);
+                    
+                    // Coba dapatkan lokasi otomatis
                     getLocation().then(location => {
-                        addGeotaggingToPhoto(e.target.result, location, stepNumber);
+                        // Otomatis isi form dengan lokasi yang didapat
+                        document.getElementById('lat' + stepNumber).value = location.lat.toFixed(6);
+                        document.getElementById('lng' + stepNumber).value = location.lng.toFixed(6);
+                        
+                        showStatus('Lokasi otomatis berhasil didapatkan! Silakan simpan.', 'success');
                     }).catch(error => {
-                        alert('Gagal mendapatkan lokasi: ' + error);
-                        // Simpan foto tanpa geotagging
-                        photoData.photos[stepNumber] = {
-                            dataUrl: e.target.result,
-                            location: null,
-                            fileName: photoNames[stepNumber]
-                        };
+                        if (error === 'User denied Geolocation') {
+                            showStatus('Akses lokasi ditolak. Silakan input koordinat manual.', 'warning');
+                        } else {
+                            showStatus('Tidak dapat mendapatkan lokasi. Silakan input manual.', 'warning');
+                        }
                     });
                 } else {
                     // Simpan foto tanpa geotagging (untuk BAPP)
                     photoData.photos[stepNumber] = {
                         dataUrl: e.target.result,
                         location: null,
-                        fileName: photoNames[stepNumber]
+                        fileName: photoNames[stepNumber],
+                        needsGeotagging: false
                     };
+                    showStatus('Foto BAPP berhasil disimpan (tanpa geotagging)', 'success');
                 }
             };
             
             reader.readAsDataURL(file);
+        }
+
+        // Fungsi untuk menampilkan input lokasi manual
+        function showManualLocationInput(stepNumber) {
+            const locationInput = document.getElementById('locationInput' + stepNumber);
+            locationInput.classList.remove('hidden');
+        }
+
+        // Fungsi untuk menyimpan lokasi manual
+        function saveManualLocation(stepNumber) {
+            const latInput = document.getElementById('lat' + stepNumber);
+            const lngInput = document.getElementById('lng' + stepNumber);
+            
+            const lat = parseFloat(latInput.value);
+            const lng = parseFloat(lngInput.value);
+            
+            if (isNaN(lat) || isNaN(lng)) {
+                showStatus('Harap masukkan koordinat yang valid!', 'error');
+                return;
+            }
+
+            const location = {
+                lat: lat,
+                lng: lng,
+                timestamp: new Date().toISOString(),
+                source: 'manual'
+            };
+
+            // Tambahkan geotagging ke foto
+            addGeotaggingToPhoto(photoData.photos[stepNumber].dataUrl, location, stepNumber);
+            
+            // Sembunyikan input lokasi
+            document.getElementById('locationInput' + stepNumber).classList.add('hidden');
         }
 
         // Fungsi untuk mendapatkan lokasi
@@ -538,16 +661,21 @@
                         const location = {
                             lat: position.coords.latitude,
                             lng: position.coords.longitude,
-                            timestamp: new Date().toISOString()
+                            timestamp: new Date().toISOString(),
+                            source: 'gps'
                         };
                         resolve(location);
                     },
                     error => {
-                        reject('Tidak dapat mengakses lokasi: ' + error.message);
+                        if (error.code === error.PERMISSION_DENIED) {
+                            reject('User denied Geolocation');
+                        } else {
+                            reject('Tidak dapat mengakses lokasi: ' + error.message);
+                        }
                     },
                     {
                         enableHighAccuracy: true,
-                        timeout: 10000,
+                        timeout: 15000,
                         maximumAge: 0
                     }
                 );
@@ -556,66 +684,54 @@
 
         // Fungsi untuk menambahkan geotagging ke foto
         function addGeotaggingToPhoto(dataUrl, location, stepNumber) {
-            // Konversi data URL ke binary
-            const binaryString = atob(dataUrl.split(',')[1]);
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
-
-            // Buat objek EXIF data dengan geotagging
-            const exifObj = {
-                "0th": {},
-                "Exif": {},
-                "GPS": {
-                    [piexif.GPSIFD.GPSLatitudeRef]: location.lat >= 0 ? "N" : "S",
-                    [piexif.GPSIFD.GPSLatitude]: piexif.GPSHelper.degToDms(Math.abs(location.lat)),
-                    [piexif.GPSIFD.GPSLongitudeRef]: location.lng >= 0 ? "E" : "W", 
-                    [piexif.GPSIFD.GPSLongitude]: piexif.GPSHelper.degToDms(Math.abs(location.lng)),
-                    [piexif.GPSIFD.GPSMapDatum]: "WGS-84"
-                },
-                "Interop": {},
-                "1st": {},
-                "thumbnail": null
-            };
-
-            // Tambahkan timestamp
-            const date = new Date(location.timestamp);
-            const dateStr = date.toISOString().split('T')[0].replace(/-/g, ':');
-            const timeStr = date.toTimeString().split(' ')[0];
-            
-            exifObj["Exif"][piexif.ExifIFD.DateTimeOriginal] = dateStr + ' ' + timeStr;
-            exifObj["Exif"][piexif.ExifIFD.DateTimeDigitized] = dateStr + ' ' + timeStr;
-
             try {
+                // Buat objek EXIF data dengan geotagging
+                const exifObj = {
+                    "0th": {},
+                    "Exif": {},
+                    "GPS": {
+                        [piexif.GPSIFD.GPSLatitudeRef]: location.lat >= 0 ? "N" : "S",
+                        [piexif.GPSIFD.GPSLatitude]: piexif.GPSHelper.degToDms(Math.abs(location.lat)),
+                        [piexif.GPSIFD.GPSLongitudeRef]: location.lng >= 0 ? "E" : "W", 
+                        [piexif.GPSIFD.GPSLongitude]: piexif.GPSHelper.degToDms(Math.abs(location.lng)),
+                        [piexif.GPSIFD.GPSMapDatum]: "WGS-84"
+                    },
+                    "Interop": {},
+                    "1st": {},
+                    "thumbnail": null
+                };
+
+                // Tambahkan timestamp
+                const date = new Date(location.timestamp);
+                const dateStr = date.toISOString().split('T')[0].replace(/-/g, ':');
+                const timeStr = date.toTimeString().split(' ')[0];
+                
+                exifObj["Exif"][piexif.ExifIFD.DateTimeOriginal] = dateStr + ' ' + timeStr;
+                exifObj["Exif"][piexif.ExifIFD.DateTimeDigitized] = dateStr + ' ' + timeStr;
+
                 // Insert EXIF data ke foto
                 const exifStr = piexif.dump(exifObj);
                 const newDataUrl = piexif.insert(exifStr, dataUrl);
 
-                // Simpan foto dengan geotagging
-                photoData.photos[stepNumber] = {
-                    dataUrl: newDataUrl,
-                    location: location,
-                    fileName: photoNames[stepNumber]
-                };
+                // Update foto dengan geotagging
+                photoData.photos[stepNumber].dataUrl = newDataUrl;
+                photoData.photos[stepNumber].location = location;
+                photoData.photos[stepNumber].needsGeotagging = false;
 
                 // Tampilkan info lokasi
                 const locationInfo = document.getElementById('locationInfo' + stepNumber);
                 locationInfo.innerHTML = `
-                    <strong>📍 Lokasi tersimpan:</strong><br>
+                    <strong>📍 Lokasi tersimpan (${location.source === 'gps' ? 'GPS' : 'Manual'}):</strong><br>
                     Lat: ${location.lat.toFixed(6)} | Lng: ${location.lng.toFixed(6)}<br>
                     Waktu: ${date.toLocaleString('id-ID')}
                 `;
                 locationInfo.classList.remove('hidden');
 
+                showStatus(`Lokasi berhasil disimpan untuk foto ${stepNumber}!`, 'success');
+
             } catch (error) {
                 console.error('Error adding geotagging:', error);
-                // Fallback: simpan tanpa geotagging
-                photoData.photos[stepNumber] = {
-                    dataUrl: dataUrl,
-                    location: location,
-                    fileName: photoNames[stepNumber]
-                };
+                showStatus('Error menambahkan geotagging ke foto', 'error');
             }
         }
 
@@ -630,6 +746,8 @@
                     document.getElementById('preview' + i).classList.add('hidden');
                     const locationInfo = document.getElementById('locationInfo' + i);
                     if (locationInfo) locationInfo.classList.add('hidden');
+                    const locationInput = document.getElementById('locationInput' + i);
+                    if (locationInput) locationInput.classList.add('hidden');
                 }
                 
                 // Sembunyikan pesan status
@@ -653,8 +771,29 @@
                 return;
             }
 
-            if (Object.keys(photoData.photos).length < 8) {
-                showStatus('Harap lengkapi semua 8 foto terlebih dahulu!', 'error');
+            // Cek apakah semua foto sudah ada
+            const missingPhotos = [];
+            for (let i = 1; i <= 8; i++) {
+                if (!photoData.photos[i]) {
+                    missingPhotos.push(i);
+                }
+            }
+
+            if (missingPhotos.length > 0) {
+                showStatus(`Harap lengkapi foto untuk langkah: ${missingPhotos.join(', ')}`, 'error');
+                return;
+            }
+
+            // Cek apakah foto 1-6 sudah punya geotagging
+            const missingGeotagging = [];
+            for (let i = 1; i <= 6; i++) {
+                if (photoData.photos[i].needsGeotagging) {
+                    missingGeotagging.push(i);
+                }
+            }
+
+            if (missingGeotagging.length > 0) {
+                showStatus(`Harap tambahkan lokasi untuk foto: ${missingGeotagging.join(', ')}`, 'warning');
                 return;
             }
 
@@ -675,7 +814,19 @@
                     folder.file(data.fileName, blob);
                 }
 
-                // Buat file info
+                // Buat file info dengan detail lokasi
+                let locationInfo = 'LOKASI GEOGRAFIS:\n';
+                for (let i = 1; i <= 6; i++) {
+                    if (photoData.photos[i] && photoData.photos[i].location) {
+                        const loc = photoData.photos[i].location;
+                        locationInfo += `\n${photoNames[i]}:\n`;
+                        locationInfo += `  Latitude: ${loc.lat.toFixed(6)}\n`;
+                        locationInfo += `  Longitude: ${loc.lng.toFixed(6)}\n`;
+                        locationInfo += `  Sumber: ${loc.source}\n`;
+                        locationInfo += `  Waktu: ${new Date(loc.timestamp).toLocaleString('id-ID')}\n`;
+                    }
+                }
+
                 const infoContent = `
 LAPORAN INSTALASI PERANGKAT
 ============================
@@ -684,11 +835,14 @@ Nama Sekolah: ${schoolName}
 Tanggal: ${new Date().toLocaleDateString('id-ID')}
 Total Foto: ${Object.keys(photoData.photos).length}
 
-Daftar Foto:
+${locationInfo}
+
+Daftar File:
 ${Object.values(photoNames).join('\n')}
 
-Foto 1-6 sudah mengandung GeoTagging GPS
-Foto 7-8 (BAPP) tanpa GeoTagging
+Keterangan:
+- Foto 1-6 mengandung metadata GPS
+- Foto 7-8 adalah dokumentasi BAPP (tanpa GPS)
                 `;
                 
                 folder.file('INFO.txt', infoContent);
@@ -703,14 +857,16 @@ Foto 7-8 (BAPP) tanpa GeoTagging
                 
                 // Tampilkan info folder
                 document.getElementById('folderInfo').innerHTML = `
-                    <h3>📁 Struktur File ZIP:</h3>
+                    <h3>📁 File Berhasil Dibuat:</h3>
+                    <p><strong>Nama File:</strong> ${zipFileName}</p>
                     <p><strong>Folder:</strong> ${folderName}/</p>
-                    <div style="margin-top: 10px; font-family: monospace; font-size: 12px;">
-                        ${Object.values(photoNames).map(name => `├── ${name}`).join('<br>')}
+                    <div style="margin-top: 10px; font-family: monospace; font-size: 12px; background: #f8f9fa; padding: 10px; border-radius: 5px;">
+                        ${Object.values(photoNames).map(name => `📷 ${name}`).join('<br>')}
                     </div>
                     <p style="margin-top: 10px; font-size: 12px; color: #666;">
-                        ✅ Foto 1-6 sudah mengandung metadata GPS<br>
-                        📄 Foto 7-8 adalah dokumentasi BAPP
+                        ✅ Semua foto 1-6 sudah mengandung metadata GPS<br>
+                        📄 Foto 7-8 adalah dokumentasi BAPP<br>
+                        📍 Lokasi tersimpan dalam file INFO.txt
                     </p>
                 `;
                 document.getElementById('folderInfo').classList.remove('hidden');
