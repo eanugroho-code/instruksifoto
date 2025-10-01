@@ -6,6 +6,7 @@
     <title>Instruksi Kerja Pemasangan Perangkat</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/piexifjs/1.0.6/piexif.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -21,7 +22,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -37,12 +38,12 @@
         }
         
         h1 {
-            font-size: 28px;
+            font-size: 24px;
             margin-bottom: 10px;
         }
         
         .subtitle {
-            font-size: 16px;
+            font-size: 14px;
             opacity: 0.9;
         }
         
@@ -72,8 +73,8 @@
         .instruction-section {
             background-color: white;
             border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             border-left: 4px solid #3498db;
         }
@@ -101,16 +102,17 @@
         .requirements {
             margin-left: 20px;
             margin-top: 10px;
+            font-size: 14px;
         }
         
         .requirements li {
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
         
         .upload-area {
             border: 2px dashed #3498db;
             border-radius: 8px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             margin-top: 15px;
             background-color: #f8f9fa;
@@ -123,7 +125,7 @@
         }
         
         .upload-icon {
-            font-size: 40px;
+            font-size: 30px;
             color: #3498db;
             margin-bottom: 10px;
         }
@@ -131,21 +133,11 @@
         .upload-text {
             font-weight: bold;
             margin-bottom: 5px;
+            font-size: 14px;
         }
         
         .upload-hint {
-            font-size: 14px;
-            color: #7f8c8d;
-        }
-        
-        .map-preview {
-            height: 200px;
-            background-color: #eee;
-            border-radius: 8px;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 12px;
             color: #7f8c8d;
         }
         
@@ -155,7 +147,7 @@
         
         .preview-image {
             max-width: 100%;
-            max-height: 300px;
+            max-height: 200px;
             border-radius: 8px;
             margin-top: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -169,7 +161,7 @@
         }
         
         button {
-            padding: 12px 25px;
+            padding: 12px 20px;
             border: none;
             border-radius: 5px;
             font-weight: bold;
@@ -205,16 +197,6 @@
             background-color: #8e44ad;
         }
         
-        .btn-capture {
-            background-color: #3498db;
-            color: white;
-            margin-top: 10px;
-        }
-        
-        .btn-capture:hover {
-            background-color: #2980b9;
-        }
-        
         .status-message {
             padding: 10px;
             border-radius: 5px;
@@ -243,17 +225,13 @@
             border-left: 4px solid #3498db;
         }
         
-        .download-section {
-            background-color: #e8f6f3;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-            text-align: center;
-            border-left: 4px solid #2ecc71;
-        }
-        
-        .download-info {
-            margin-bottom: 15px;
+        .location-info {
+            background-color: #fff3cd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 12px;
+            border-left: 3px solid #ffc107;
         }
         
         footer {
@@ -262,22 +240,6 @@
             padding: 20px;
             color: #7f8c8d;
             font-size: 14px;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            background-color: #2ecc71;
-            width: 0%;
-            transition: width 0.3s;
         }
         
         @media (max-width: 768px) {
@@ -304,7 +266,7 @@
     <div class="container">
         <header>
             <h1>Instruksi Kerja Pemasangan Perangkat</h1>
-            <p class="subtitle">Ikuti langkah-langkah di bawah ini dengan teliti dan lengkapi semua persyaratan</p>
+            <p class="subtitle">Ambil foto sesuai instruksi - GeoTagging otomatis akan disematkan</p>
         </header>
         
         <form id="installationForm">
@@ -321,24 +283,15 @@
                     <h2>Foto Plang Sekolah</h2>
                 </div>
                 <p>Ambil foto plang sekolah yang jelas dan dapat terbaca dengan baik.</p>
-                <div class="requirements">
-                    <p><strong>Persyaratan:</strong></p>
-                    <ul>
-                        <li>Foto harus jelas dan terbaca</li>
-                        <li>Harus ada Geo Tagging / Gmaps</li>
-                    </ul>
-                </div>
                 
                 <div class="upload-area" onclick="triggerUpload('photo1')">
                     <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
-                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                    <div class="upload-text">Klik untuk Mengambil Foto</div>
+                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
                 </div>
-                <input type="file" id="photo1" class="hidden" accept="image/*" onchange="previewImage(this, 'preview1')">
+                <input type="file" id="photo1" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 1)">
                 <img id="preview1" class="preview-image hidden">
-                
-                <button type="button" class="btn-capture" onclick="captureLocation('location1')">Ambil Lokasi Saat Ini</button>
-                <div id="location1" class="map-preview">Lokasi belum diambil</div>
+                <div id="locationInfo1" class="location-info hidden"></div>
             </div>
             
             <!-- Langkah 2 -->
@@ -348,25 +301,15 @@
                     <h2>Foto PIC dengan Dus</h2>
                 </div>
                 <p>Ambil foto PIC (Person In Charge) bersama dengan dus perangkat.</p>
-                <div class="requirements">
-                    <p><strong>Persyaratan:</strong></p>
-                    <ul>
-                        <li>Wajib menunjukkan wajah PIC dengan jelas</li>
-                        <li>Dus perangkat harus terlihat utuh</li>
-                        <li>Harus ada Geo Tagging / Gmaps</li>
-                    </ul>
-                </div>
                 
                 <div class="upload-area" onclick="triggerUpload('photo2')">
                     <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
-                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                    <div class="upload-text">Klik untuk Mengambil Foto</div>
+                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
                 </div>
-                <input type="file" id="photo2" class="hidden" accept="image/*" onchange="previewImage(this, 'preview2')">
+                <input type="file" id="photo2" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 2)">
                 <img id="preview2" class="preview-image hidden">
-                
-                <button type="button" class="btn-capture" onclick="captureLocation('location2')">Ambil Lokasi Saat Ini</button>
-                <div id="location2" class="map-preview">Lokasi belum diambil</div>
+                <div id="locationInfo2" class="location-info hidden"></div>
             </div>
             
             <!-- Langkah 3 -->
@@ -377,56 +320,39 @@
                 </div>
                 <p>Ambil foto semua kelengkapan perangkat yang akan dipasang.</p>
                 <div class="requirements">
-                    <p><strong>Persyaratan:</strong></p>
+                    <p><strong>Harus menunjukkan:</strong></p>
                     <ul>
-                        <li>Foto 3 kabel</li>
-                        <li>1 Remote</li>
-                        <li>Baterai</li>
-                        <li>2 Pen</li>
-                        <li>1 Buku panduan</li>
-                        <li>1 Buku garansi</li>
-                        <li>Harus ada Geo Tagging / Gmaps</li>
+                        <li>3 kabel + 1 Remote + Baterai</li>
+                        <li>2 Pen + 1 Buku panduan + 1 Buku garansi</li>
                     </ul>
                 </div>
                 
                 <div class="upload-area" onclick="triggerUpload('photo3')">
                     <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
-                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                    <div class="upload-text">Klik untuk Mengambil Foto</div>
+                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
                 </div>
-                <input type="file" id="photo3" class="hidden" accept="image/*" onchange="previewImage(this, 'preview3')">
+                <input type="file" id="photo3" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 3)">
                 <img id="preview3" class="preview-image hidden">
-                
-                <button type="button" class="btn-capture" onclick="captureLocation('location3')">Ambil Lokasi Saat Ini</button>
-                <div id="location3" class="map-preview">Lokasi belum diambil</div>
+                <div id="locationInfo3" class="location-info hidden"></div>
             </div>
             
             <!-- Langkah 4 -->
             <div class="instruction-section">
                 <div class="section-title">
                     <div class="section-number">4</div>
-                    <h2>Foto Proses Instalasi/Pemasangan</h2>
+                    <h2>Foto Proses Instalasi</h2>
                 </div>
                 <p>Dokumentasikan proses instalasi atau pemasangan perangkat.</p>
-                <div class="requirements">
-                    <p><strong>Persyaratan:</strong></p>
-                    <ul>
-                        <li>Foto harus menunjukkan proses pemasangan</li>
-                        <li>Perangkat harus terlihat sedang dipasang</li>
-                        <li>Harus ada Geo Tagging / Gmaps</li>
-                    </ul>
-                </div>
                 
                 <div class="upload-area" onclick="triggerUpload('photo4')">
                     <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
-                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                    <div class="upload-text">Klik untuk Mengambil Foto</div>
+                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
                 </div>
-                <input type="file" id="photo4" class="hidden" accept="image/*" onchange="previewImage(this, 'preview4')">
+                <input type="file" id="photo4" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 4)">
                 <img id="preview4" class="preview-image hidden">
-                
-                <button type="button" class="btn-capture" onclick="captureLocation('location4')">Ambil Lokasi Saat Ini</button>
-                <div id="location4" class="map-preview">Lokasi belum diambil</div>
+                <div id="locationInfo4" class="location-info hidden"></div>
             </div>
             
             <!-- Langkah 5 -->
@@ -436,25 +362,15 @@
                     <h2>Foto IMEI / SN (Serial Number)</h2>
                 </div>
                 <p>Ambil foto IMEI atau Serial Number yang terletak di belakang TV.</p>
-                <div class="requirements">
-                    <p><strong>Persyaratan:</strong></p>
-                    <ul>
-                        <li>IMEI/SN harus terbaca dengan jelas</li>
-                        <li>Foto diambil dari belakang TV</li>
-                        <li>Harus ada Geo Tagging / Gmaps</li>
-                    </ul>
-                </div>
                 
                 <div class="upload-area" onclick="triggerUpload('photo5')">
                     <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
-                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                    <div class="upload-text">Klik untuk Mengambil Foto</div>
+                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
                 </div>
-                <input type="file" id="photo5" class="hidden" accept="image/*" onchange="previewImage(this, 'preview5')">
+                <input type="file" id="photo5" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 5)">
                 <img id="preview5" class="preview-image hidden">
-                
-                <button type="button" class="btn-capture" onclick="captureLocation('location5')">Ambil Lokasi Saat Ini</button>
-                <div id="location5" class="map-preview">Lokasi belum diambil</div>
+                <div id="locationInfo5" class="location-info hidden"></div>
             </div>
             
             <!-- Langkah 6 -->
@@ -465,24 +381,21 @@
                 </div>
                 <p>Ambil foto sesi training yang sedang berlangsung.</p>
                 <div class="requirements">
-                    <p><strong>Persyaratan:</strong></p>
+                    <p><strong>Wajib menunjukkan:</strong></p>
                     <ul>
-                        <li>Wajib menunjukkan Teach Buddy</li>
-                        <li>Teach Buddy harus terinstal di semua direktorat</li>
-                        <li>Harus ada Geo Tagging / Gmaps</li>
+                        <li>Teach Buddy terinstal</li>
+                        <li>Terlihat di semua direktorat</li>
                     </ul>
                 </div>
                 
                 <div class="upload-area" onclick="triggerUpload('photo6')">
                     <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
-                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                    <div class="upload-text">Klik untuk Mengambil Foto</div>
+                    <div class="upload-hint">GeoTagging akan otomatis disematkan</div>
                 </div>
-                <input type="file" id="photo6" class="hidden" accept="image/*" onchange="previewImage(this, 'preview6')">
+                <input type="file" id="photo6" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 6)">
                 <img id="preview6" class="preview-image hidden">
-                
-                <button type="button" class="btn-capture" onclick="captureLocation('location6')">Ambil Lokasi Saat Ini</button>
-                <div id="location6" class="map-preview">Lokasi belum diambil</div>
+                <div id="locationInfo6" class="location-info hidden"></div>
             </div>
             
             <!-- Langkah 7 -->
@@ -493,23 +406,20 @@
                 </div>
                 <p>Ambil foto Berita Acara Pemeriksaan dan Penerimaan (BAPP) halaman 1.</p>
                 <div class="requirements">
-                    <p><strong>Persyaratan:</strong></p>
                     <ul>
                         <li>IMEI barcode ditempel</li>
                         <li>Di conteng yang sesuai</li>
                         <li>Bagian atas diisi semua</li>
-                        <li>Nama PIC/Kepala sekolah harus sama</li>
-                        <li>Wajib ada stempel dan tanda tangan</li>
-                        <li>Tidak menggunakan geo tagging / gmaps</li>
+                        <li>Stempel dan tanda tangan</li>
                     </ul>
                 </div>
                 
                 <div class="upload-area" onclick="triggerUpload('photo7')">
                     <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
-                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                    <div class="upload-text">Klik untuk Mengambil Foto</div>
+                    <div class="upload-hint">TANPA GeoTagging</div>
                 </div>
-                <input type="file" id="photo7" class="hidden" accept="image/*" onchange="previewImage(this, 'preview7')">
+                <input type="file" id="photo7" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 7, false)">
                 <img id="preview7" class="preview-image hidden">
             </div>
             
@@ -521,48 +431,30 @@
                 </div>
                 <p>Ambil foto Berita Acara Pemeriksaan dan Penerimaan (BAPP) halaman 2.</p>
                 <div class="requirements">
-                    <p><strong>Persyaratan:</strong></p>
                     <ul>
-                        <li>Di conteng</li>
                         <li>Nama pelatihan diisi</li>
                         <li>Media pelatihan diconteng di luar jaringan</li>
                         <li>Coret "belum dapat diterima" dan "belum berada"</li>
-                        <li>Nama PIC/Kepala sekolah harus sama dengan halaman 1</li>
-                        <li>Wajib ada stempel dan tanda tangan</li>
-                        <li>Tidak menggunakan geo tagging / gmaps</li>
+                        <li>Stempel dan tanda tangan</li>
                     </ul>
                 </div>
                 
                 <div class="upload-area" onclick="triggerUpload('photo8')">
                     <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengunggah Foto</div>
-                    <div class="upload-hint">Format: JPG, PNG | Maks: 5MB</div>
+                    <div class="upload-text">Klik untuk Mengambil Foto</div>
+                    <div class="upload-hint">TANPA GeoTagging</div>
                 </div>
-                <input type="file" id="photo8" class="hidden" accept="image/*" onchange="previewImage(this, 'preview8')">
+                <input type="file" id="photo8" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 8, false)">
                 <img id="preview8" class="preview-image hidden">
             </div>
             
             <div class="action-buttons">
                 <button type="button" class="btn-reset" onclick="resetForm()">Reset Semua</button>
-                <button type="button" class="btn-submit" onclick="submitForm()">Kirim Semua Data</button>
-                <button type="button" class="btn-download" onclick="downloadZip()" id="downloadBtn" disabled>Download ZIP</button>
+                <button type="button" class="btn-download" onclick="downloadAllPhotos()">Download Semua Foto (ZIP)</button>
             </div>
             
             <div id="statusMessage" class="status-message hidden"></div>
             <div id="folderInfo" class="folder-info hidden"></div>
-            
-            <div id="downloadSection" class="download-section hidden">
-                <h3>Download Berhasil!</h3>
-                <div class="download-info">
-                    <p>File ZIP berisi semua foto dan data telah berhasil dibuat.</p>
-                    <p>File: <strong id="zipFileName"></strong></p>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress" id="zipProgress"></div>
-                </div>
-                <p>File akan otomatis terdownload. Jika tidak, klik tombol di bawah:</p>
-                <button type="button" class="btn-download" onclick="retryDownload()">Download Ulang ZIP</button>
-            </div>
         </form>
         
         <footer>
@@ -571,12 +463,22 @@
     </div>
 
     <script>
-        // Data untuk menyimpan informasi yang diperlukan
-        let formData = {
+        // Data untuk menyimpan foto dengan geotagging
+        let photoData = {
             schoolName: '',
-            locations: {},
-            photos: {},
-            folderName: ''
+            photos: {}
+        };
+
+        // Nama file untuk setiap langkah
+        const photoNames = {
+            1: "1_plang_sekolah.jpg",
+            2: "2_pic_dengan_dus.jpg", 
+            3: "3_kelengkapan_perangkat.jpg",
+            4: "4_proses_instalasi.jpg",
+            5: "5_imei_sn.jpg",
+            6: "6_training.jpg",
+            7: "7_bapp_halaman1.jpg",
+            8: "8_bapp_halaman2.jpg"
         };
 
         // Fungsi untuk memicu upload file
@@ -584,279 +486,249 @@
             document.getElementById(inputId).click();
         }
         
-        // Fungsi untuk menampilkan preview gambar
-        function previewImage(input, previewId) {
+        // Fungsi untuk memproses foto dan menambahkan geotagging
+        function processPhoto(input, stepNumber, includeGeotagging = true) {
             const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById(previewId);
-                    preview.src = e.target.result;
-                    preview.classList.remove('hidden');
-                    
-                    // Simpan data foto
-                    const stepNumber = input.id.replace('photo', '');
-                    formData.photos[stepNumber] = {
-                        file: file,
-                        dataUrl: e.target.result
+            if (!file) return;
+
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                // Tampilkan preview
+                const preview = document.getElementById('preview' + stepNumber);
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+
+                if (includeGeotagging) {
+                    // Dapatkan lokasi dan tambahkan geotagging
+                    getLocation().then(location => {
+                        addGeotaggingToPhoto(e.target.result, location, stepNumber);
+                    }).catch(error => {
+                        alert('Gagal mendapatkan lokasi: ' + error);
+                        // Simpan foto tanpa geotagging
+                        photoData.photos[stepNumber] = {
+                            dataUrl: e.target.result,
+                            location: null,
+                            fileName: photoNames[stepNumber]
+                        };
+                    });
+                } else {
+                    // Simpan foto tanpa geotagging (untuk BAPP)
+                    photoData.photos[stepNumber] = {
+                        dataUrl: e.target.result,
+                        location: null,
+                        fileName: photoNames[stepNumber]
                     };
                 }
-                reader.readAsDataURL(file);
-            }
+            };
+            
+            reader.readAsDataURL(file);
         }
-        
-        // Fungsi untuk mengambil lokasi
-        function captureLocation(locationId) {
-            if (navigator.geolocation) {
+
+        // Fungsi untuk mendapatkan lokasi
+        function getLocation() {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    reject('Browser tidak mendukung geolocation');
+                    return;
+                }
+
                 navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        
-                        // Tampilkan lokasi di elemen
-                        const locationElement = document.getElementById(locationId);
-                        locationElement.innerHTML = `
-                            <div style="padding: 10px; text-align: center;">
-                                <div style="font-weight: bold; margin-bottom: 5px;">Lokasi berhasil diambil</div>
-                                <div style="font-size: 14px;">Lat: ${lat.toFixed(6)}</div>
-                                <div style="font-size: 14px;">Lng: ${lng.toFixed(6)}</div>
-                                <div style="margin-top: 10px;">
-                                    <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank" style="color: #3498db; text-decoration: none;">
-                                        Lihat di Google Maps
-                                    </a>
-                                </div>
-                            </div>
-                        `;
-                        
-                        // Simpan data lokasi
-                        const stepNumber = locationId.replace('location', '');
-                        formData.locations[stepNumber] = {
-                            lat: lat,
-                            lng: lng,
+                    position => {
+                        const location = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
                             timestamp: new Date().toISOString()
                         };
+                        resolve(location);
                     },
-                    function(error) {
-                        alert('Gagal mengambil lokasi: ' + error.message);
+                    error => {
+                        reject('Tidak dapat mengakses lokasi: ' + error.message);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
                     }
                 );
-            } else {
-                alert('Browser tidak mendukung geolocation');
+            });
+        }
+
+        // Fungsi untuk menambahkan geotagging ke foto
+        function addGeotaggingToPhoto(dataUrl, location, stepNumber) {
+            // Konversi data URL ke binary
+            const binaryString = atob(dataUrl.split(',')[1]);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+
+            // Buat objek EXIF data dengan geotagging
+            const exifObj = {
+                "0th": {},
+                "Exif": {},
+                "GPS": {
+                    [piexif.GPSIFD.GPSLatitudeRef]: location.lat >= 0 ? "N" : "S",
+                    [piexif.GPSIFD.GPSLatitude]: piexif.GPSHelper.degToDms(Math.abs(location.lat)),
+                    [piexif.GPSIFD.GPSLongitudeRef]: location.lng >= 0 ? "E" : "W", 
+                    [piexif.GPSIFD.GPSLongitude]: piexif.GPSHelper.degToDms(Math.abs(location.lng)),
+                    [piexif.GPSIFD.GPSMapDatum]: "WGS-84"
+                },
+                "Interop": {},
+                "1st": {},
+                "thumbnail": null
+            };
+
+            // Tambahkan timestamp
+            const date = new Date(location.timestamp);
+            const dateStr = date.toISOString().split('T')[0].replace(/-/g, ':');
+            const timeStr = date.toTimeString().split(' ')[0];
+            
+            exifObj["Exif"][piexif.ExifIFD.DateTimeOriginal] = dateStr + ' ' + timeStr;
+            exifObj["Exif"][piexif.ExifIFD.DateTimeDigitized] = dateStr + ' ' + timeStr;
+
+            try {
+                // Insert EXIF data ke foto
+                const exifStr = piexif.dump(exifObj);
+                const newDataUrl = piexif.insert(exifStr, dataUrl);
+
+                // Simpan foto dengan geotagging
+                photoData.photos[stepNumber] = {
+                    dataUrl: newDataUrl,
+                    location: location,
+                    fileName: photoNames[stepNumber]
+                };
+
+                // Tampilkan info lokasi
+                const locationInfo = document.getElementById('locationInfo' + stepNumber);
+                locationInfo.innerHTML = `
+                    <strong>📍 Lokasi tersimpan:</strong><br>
+                    Lat: ${location.lat.toFixed(6)} | Lng: ${location.lng.toFixed(6)}<br>
+                    Waktu: ${date.toLocaleString('id-ID')}
+                `;
+                locationInfo.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error adding geotagging:', error);
+                // Fallback: simpan tanpa geotagging
+                photoData.photos[stepNumber] = {
+                    dataUrl: dataUrl,
+                    location: location,
+                    fileName: photoNames[stepNumber]
+                };
             }
         }
-        
+
         // Fungsi untuk reset form
         function resetForm() {
             if (confirm('Apakah Anda yakin ingin mereset semua data?')) {
                 document.getElementById('installationForm').reset();
+                document.getElementById('schoolName').value = '';
                 
-                // Sembunyikan semua preview gambar
-                const previews = document.querySelectorAll('.preview-image');
-                previews.forEach(preview => {
-                    preview.classList.add('hidden');
-                });
-                
-                // Reset lokasi
-                const locations = document.querySelectorAll('.map-preview');
-                locations.forEach(location => {
-                    location.innerHTML = 'Lokasi belum diambil';
-                });
+                // Sembunyikan semua preview dan info lokasi
+                for (let i = 1; i <= 8; i++) {
+                    document.getElementById('preview' + i).classList.add('hidden');
+                    const locationInfo = document.getElementById('locationInfo' + i);
+                    if (locationInfo) locationInfo.classList.add('hidden');
+                }
                 
                 // Sembunyikan pesan status
                 document.getElementById('statusMessage').classList.add('hidden');
                 document.getElementById('folderInfo').classList.add('hidden');
-                document.getElementById('downloadSection').classList.add('hidden');
-                
-                // Nonaktifkan tombol download
-                document.getElementById('downloadBtn').disabled = true;
                 
                 // Reset data
-                formData = {
+                photoData = {
                     schoolName: '',
-                    locations: {},
-                    photos: {},
-                    folderName: ''
+                    photos: {}
                 };
             }
         }
-        
-        // Fungsi untuk membuat nama folder
-        function createFolderName(schoolName) {
-            const cleanName = schoolName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
-            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
-            return `Instalasi_${cleanName}_${timestamp}`;
-        }
-        
-        // Fungsi untuk submit form
-        function submitForm() {
-            // Validasi nama sekolah
+
+        // Fungsi untuk mendownload semua foto sebagai ZIP
+        async function downloadAllPhotos() {
             const schoolName = document.getElementById('schoolName').value.trim();
             if (!schoolName) {
-                alert('Harap masukkan nama sekolah!');
+                showStatus('Harap masukkan nama sekolah terlebih dahulu!', 'error');
                 document.getElementById('schoolName').focus();
                 return;
             }
-            
-            formData.schoolName = schoolName;
-            
-            // Validasi sederhana
-            let isValid = true;
-            const requiredPhotos = ['photo1', 'photo2', 'photo3', 'photo4', 'photo5', 'photo6', 'photo7', 'photo8'];
-            
-            for (const photoId of requiredPhotos) {
-                const photoInput = document.getElementById(photoId);
-                if (!photoInput.files || photoInput.files.length === 0) {
-                    isValid = false;
-                    break;
-                }
-            }
-            
-            // Validasi lokasi untuk langkah 1-6
-            const requiredLocations = ['location1', 'location2', 'location3', 'location4', 'location5', 'location6'];
-            for (const locationId of requiredLocations) {
-                const locationElement = document.getElementById(locationId);
-                if (locationElement.innerHTML === 'Lokasi belum diambil') {
-                    isValid = false;
-                    break;
-                }
-            }
-            
-            // Tampilkan pesan status
-            const statusMessage = document.getElementById('statusMessage');
-            statusMessage.classList.remove('hidden');
-            
-            if (isValid) {
-                // Membuat folder sekolah
-                formData.folderName = createFolderName(schoolName);
-                
-                // Tampilkan informasi folder
-                const folderInfo = document.getElementById('folderInfo');
-                folderInfo.innerHTML = `
-                    <h3>Data Siap Didownload</h3>
-                    <p><strong>Nama Folder:</strong> ${formData.folderName}</p>
-                    <p>Semua data telah divalidasi dan siap untuk didownload dalam format ZIP.</p>
-                    <p>Klik tombol "Download ZIP" untuk mengunduh semua foto dan data.</p>
-                `;
-                folderInfo.classList.remove('hidden');
-                
-                // Aktifkan tombol download
-                document.getElementById('downloadBtn').disabled = false;
-                
-                statusMessage.textContent = 'Semua data telah divalidasi dan siap didownload!';
-                statusMessage.className = 'status-message success';
-                
-            } else {
-                statusMessage.textContent = 'Harap lengkapi semua data yang diperlukan!';
-                statusMessage.className = 'status-message error';
-                document.getElementById('folderInfo').classList.add('hidden');
-                document.getElementById('downloadBtn').disabled = true;
-            }
-            
-            // Scroll ke pesan status
-            statusMessage.scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // Fungsi untuk membuat dan mendownload ZIP
-        async function downloadZip() {
-            if (!formData.folderName) {
-                alert('Harap kirim data terlebih dahulu sebelum download!');
+
+            if (Object.keys(photoData.photos).length < 8) {
+                showStatus('Harap lengkapi semua 8 foto terlebih dahulu!', 'error');
                 return;
             }
-            
-            const zip = new JSZip();
-            const folder = zip.folder(formData.folderName);
-            
-            // Buat subfolder untuk setiap langkah
-            const stepFolders = {
-                '1': '01_Plang_Sekolah',
-                '2': '02_PIC_dengan_Dus',
-                '3': '03_Kelengkapan_Perangkat',
-                '4': '04_Proses_Instalasi',
-                '5': '05_IMEI_SN',
-                '6': '06_Training',
-                '7': '07_BAPP_Halaman_1',
-                '8': '08_BAPP_Halaman_2'
-            };
-            
-            // Progress bar
-            const progressBar = document.getElementById('zipProgress');
-            let processedFiles = 0;
-            const totalFiles = Object.keys(formData.photos).length + Object.keys(formData.locations).length;
-            
-            // Tambahkan foto ke ZIP
-            for (const step in formData.photos) {
-                const stepFolder = folder.folder(stepFolders[step]);
-                const photoData = formData.photos[step];
+
+            photoData.schoolName = schoolName;
+            const folderName = schoolName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+
+            try {
+                const zip = new JSZip();
+                const folder = zip.folder(folderName);
+
+                // Tambahkan setiap foto ke ZIP
+                for (const [step, data] of Object.entries(photoData.photos)) {
+                    // Konversi data URL ke blob
+                    const response = await fetch(data.dataUrl);
+                    const blob = await response.blob();
+                    
+                    // Tambahkan ke ZIP dengan nama yang sesuai
+                    folder.file(data.fileName, blob);
+                }
+
+                // Buat file info
+                const infoContent = `
+LAPORAN INSTALASI PERANGKAT
+============================
+
+Nama Sekolah: ${schoolName}
+Tanggal: ${new Date().toLocaleDateString('id-ID')}
+Total Foto: ${Object.keys(photoData.photos).length}
+
+Daftar Foto:
+${Object.values(photoNames).join('\n')}
+
+Foto 1-6 sudah mengandung GeoTagging GPS
+Foto 7-8 (BAPP) tanpa GeoTagging
+                `;
                 
-                // Konversi data URL ke blob
-                const response = await fetch(photoData.dataUrl);
-                const blob = await response.blob();
+                folder.file('INFO.txt', infoContent);
+
+                // Generate dan download ZIP
+                const zipBlob = await zip.generateAsync({ type: 'blob' });
+                const zipFileName = `${folderName}_instalasi.zip`;
                 
-                stepFolder.file(`foto_${step}.jpg`, blob);
+                saveAs(zipBlob, zipFileName);
                 
-                // Update progress
-                processedFiles++;
-                progressBar.style.width = `${(processedFiles / totalFiles) * 100}%`;
+                showStatus(`File ZIP "${zipFileName}" berhasil didownload!`, 'success');
+                
+                // Tampilkan info folder
+                document.getElementById('folderInfo').innerHTML = `
+                    <h3>📁 Struktur File ZIP:</h3>
+                    <p><strong>Folder:</strong> ${folderName}/</p>
+                    <div style="margin-top: 10px; font-family: monospace; font-size: 12px;">
+                        ${Object.values(photoNames).map(name => `├── ${name}`).join('<br>')}
+                    </div>
+                    <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                        ✅ Foto 1-6 sudah mengandung metadata GPS<br>
+                        📄 Foto 7-8 adalah dokumentasi BAPP
+                    </p>
+                `;
+                document.getElementById('folderInfo').classList.remove('hidden');
+                
+            } catch (error) {
+                showStatus('Error membuat file ZIP: ' + error.message, 'error');
             }
-            
-            // Tambahkan data lokasi
-            const locationData = {
-                sekolah: formData.schoolName,
-                timestamp: new Date().toISOString(),
-                lokasi: formData.locations
-            };
-            
-            folder.file('data_lokasi.json', JSON.stringify(locationData, null, 2));
-            
-            processedFiles++;
-            progressBar.style.width = `${(processedFiles / totalFiles) * 100}%`;
-            
-            // Tambahkan file README
-            const readmeContent = `
-INSTALASI PERANGKAT SEKOLAH
-===========================
-
-Nama Sekolah: ${formData.schoolName}
-Tanggal Instalasi: ${new Date().toLocaleDateString('id-ID')}
-
-STRUKTUR FOLDER:
-- 01_Plang_Sekolah: Foto plang sekolah dengan geo tagging
-- 02_PIC_dengan_Dus: Foto PIC bersama dus perangkat dengan geo tagging
-- 03_Kelengkapan_Perangkat: Foto kelengkapan perangkat dengan geo tagging
-- 04_Proses_Instalasi: Foto proses pemasangan dengan geo tagging
-- 05_IMEI_SN: Foto IMEI/Serial Number dengan geo tagging
-- 06_Training: Foto sesi training dengan geo tagging
-- 07_BAPP_Halaman_1: Foto BAPP halaman 1
-- 08_BAPP_Halaman_2: Foto BAPP halaman 2
-
-File data_lokasi.json berisi koordinat GPS dari setiap langkah pekerjaan.
-            `;
-            
-            folder.file('README.txt', readmeContent);
-            
-            // Generate ZIP
-            const zipFileName = `${formData.folderName}.zip`;
-            
-            zip.generateAsync({ type: 'blob' })
-            .then(function(content) {
-                // Simpan file ZIP
-                saveAs(content, zipFileName);
-                
-                // Tampilkan section download
-                document.getElementById('downloadSection').classList.remove('hidden');
-                document.getElementById('zipFileName').textContent = zipFileName;
-                
-                // Scroll ke section download
-                document.getElementById('downloadSection').scrollIntoView({ behavior: 'smooth' });
-            })
-            .catch(function(error) {
-                alert('Terjadi kesalahan saat membuat file ZIP: ' + error.message);
-            });
         }
-        
-        // Fungsi untuk download ulang
-        function retryDownload() {
-            downloadZip();
+
+        // Fungsi untuk menampilkan status
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = `status-message ${type}`;
+            statusElement.classList.remove('hidden');
+            
+            // Scroll ke status message
+            statusElement.scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
