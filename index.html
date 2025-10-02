@@ -171,6 +171,7 @@
         .preview-container {
             position: relative;
             margin-top: 20px;
+            display: inline-block;
         }
         
         .preview-image {
@@ -179,6 +180,58 @@
             border-radius: 12px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
             border: 3px solid #e3f2fd;
+        }
+        
+        .watermark-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 200px;
+        }
+        
+        .pin-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        
+        .watermark-content {
+            flex: 1;
+        }
+        
+        .coordinate-text {
+            font-weight: 600;
+            font-size: 13px;
+            color: white;
+            margin-bottom: 2px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .datetime-text {
+            font-weight: 400;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .location-text {
+            font-weight: 500;
+            font-size: 11px;
+            color: #a8d8ff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
         
         .bapp-preview {
@@ -372,6 +425,15 @@
             text-align: center;
             font-weight: 500;
         }
+
+        .watermark-example {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #ffd54f;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
         
         @media (max-width: 768px) {
             .container {
@@ -397,6 +459,12 @@
             h1 {
                 font-size: 24px;
             }
+
+            .watermark-overlay {
+                font-size: 10px;
+                padding: 10px 12px;
+                min-width: 180px;
+            }
         }
     </style>
 </head>
@@ -404,7 +472,7 @@
     <div class="container">
         <header>
             <h1>📋 Instruksi Kerja Pemasangan Perangkat</h1>
-            <p class="subtitle">Ambil foto sesuai instruksi • Input lokasi manual • Auto-scan untuk BAPP</p>
+            <p class="subtitle">Ambil foto dengan watermark transparan • Style modern dan elegan</p>
         </header>
         
         <form id="installationForm">
@@ -422,34 +490,58 @@
                 </div>
                 <p>Ambil foto plang sekolah yang jelas dan dapat terbaca dengan baik.</p>
                 
+                <div class="watermark-example">
+                    <strong>📍 CONTOH WATERMARK TRANSPARAN:</strong><br>
+                    <div style="display: flex; align-items: center; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 10px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.2); margin: 10px 0;">
+                        <canvas id="examplePin" width="24" height="24" style="margin-right: 10px;"></canvas>
+                        <div>
+                            <div style="font-weight: 600; font-size: 13px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">-6.2088, 106.8456</div>
+                            <div style="font-size: 11px; color: rgba(255,255,255,0.9); text-shadow: 0 1px 2px rgba(0,0,0,0.5);">25 Des 2023 14:30</div>
+                            <div style="font-size: 11px; color: #a8d8ff; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Jakarta Pusat, DKI Jakarta</div>
+                        </div>
+                    </div>
+                    <small>Watermark transparan akan muncul di pojok kiri bawah foto dengan efek glassmorphism</small>
+                </div>
+                
                 <div class="upload-area" onclick="triggerUpload('photo1')">
                     <div class="upload-icon">📷</div>
                     <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">Format: JPG/PNG • Maks: 5MB</div>
+                    <div class="upload-hint">Format: JPG/PNG • Watermark transparan elegan</div>
                 </div>
                 <input type="file" id="photo1" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 1)">
                 
                 <div class="preview-container">
                     <img id="preview1" class="preview-image hidden">
+                    <div id="watermark1" class="watermark-overlay hidden">
+                        <canvas class="pin-icon" width="24" height="24"></canvas>
+                        <div class="watermark-content">
+                            <div class="coordinate-text"></div>
+                            <div class="datetime-text"></div>
+                            <div class="location-text"></div>
+                        </div>
+                    </div>
                 </div>
                 <div id="photoStatus1" class="photo-status hidden"></div>
                 
                 <div id="locationInput1" class="location-input hidden">
                     <div class="gps-instruction">
-                        <strong>📍 CARA MENDAPATKAN KOORDINAT:</strong><br>
+                        <strong>📍 CARA MENDAPATKAN KOORDINAT DAN LOKASI:</strong><br>
                         1. Buka <strong>Google Maps</strong> di ponsel<br>
                         2. Tekan <strong>lama</strong> pada lokasi sekolah<br>
-                        3. Salin angka <strong>latitude dan longitude</strong> yang muncul
+                        3. Salin angka <strong>latitude dan longitude</strong><br>
+                        4. Catat juga <strong>nama daerah dan provinsi</strong>
                     </div>
-                    <p><strong>Masukkan Koordinat Lokasi:</strong></p>
+                    <p><strong>Masukkan Data Lokasi:</strong></p>
                     <input type="text" id="lat1" placeholder="Latitude (contoh: -6.2088)" pattern="-?\d+\.?\d*">
                     <input type="text" id="lng1" placeholder="Longitude (contoh: 106.8456)" pattern="-?\d+\.?\d*">
+                    <input type="text" id="city1" placeholder="Nama Kota/Kabupaten (contoh: Jakarta Pusat)" style="width: calc(100% - 16px); margin-top: 8px;">
+                    <input type="text" id="province1" placeholder="Nama Provinsi (contoh: DKI Jakarta)" style="width: calc(100% - 16px); margin-top: 8px;">
                     <div style="text-align: center; margin-top: 15px;">
                         <button type="button" class="btn-gps" onclick="getGPSLocation(1)">
                             📍 Ambil Lokasi GPS
                         </button>
-                        <button type="button" class="btn-location" onclick="saveManualLocation(1)">
-                            💾 Simpan Lokasi
+                        <button type="button" class="btn-location" onclick="saveLocationWithWatermark(1)">
+                            💾 Simpan & Watermark
                         </button>
                     </div>
                 </div>
@@ -473,16 +565,26 @@
                 
                 <div class="preview-container">
                     <img id="preview2" class="preview-image hidden">
+                    <div id="watermark2" class="watermark-overlay hidden">
+                        <canvas class="pin-icon" width="24" height="24"></canvas>
+                        <div class="watermark-content">
+                            <div class="coordinate-text"></div>
+                            <div class="datetime-text"></div>
+                            <div class="location-text"></div>
+                        </div>
+                    </div>
                 </div>
                 <div id="photoStatus2" class="photo-status hidden"></div>
                 
                 <div id="locationInput2" class="location-input hidden">
-                    <p><strong>Masukkan Koordinat Lokasi:</strong></p>
+                    <p><strong>Masukkan Data Lokasi:</strong></p>
                     <input type="text" id="lat2" placeholder="Latitude" pattern="-?\d+\.?\d*">
                     <input type="text" id="lng2" placeholder="Longitude" pattern="-?\d+\.?\d*">
+                    <input type="text" id="city2" placeholder="Nama Kota/Kabupaten" style="width: calc(100% - 16px); margin-top: 8px;">
+                    <input type="text" id="province2" placeholder="Nama Provinsi" style="width: calc(100% - 16px); margin-top: 8px;">
                     <div style="text-align: center; margin-top: 15px;">
                         <button type="button" class="btn-gps" onclick="getGPSLocation(2)">📍 GPS</button>
-                        <button type="button" class="btn-location" onclick="saveManualLocation(2)">💾 Simpan</button>
+                        <button type="button" class="btn-location" onclick="saveLocationWithWatermark(2)">💾 Watermark</button>
                     </div>
                 </div>
                 <div id="locationInfo2" class="location-info hidden"></div>
@@ -510,14 +612,24 @@
                 <input type="file" id="photo3" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 3)">
                 <div class="preview-container">
                     <img id="preview3" class="preview-image hidden">
+                    <div id="watermark3" class="watermark-overlay hidden">
+                        <canvas class="pin-icon" width="24" height="24"></canvas>
+                        <div class="watermark-content">
+                            <div class="coordinate-text"></div>
+                            <div class="datetime-text"></div>
+                            <div class="location-text"></div>
+                        </div>
+                    </div>
                 </div>
                 <div id="photoStatus3" class="photo-status hidden"></div>
                 <div id="locationInput3" class="location-input hidden">
                     <input type="text" id="lat3" placeholder="Latitude" pattern="-?\d+\.?\d*">
                     <input type="text" id="lng3" placeholder="Longitude" pattern="-?\d+\.?\d*">
+                    <input type="text" id="city3" placeholder="Nama Kota/Kabupaten" style="width: calc(100% - 16px); margin-top: 8px;">
+                    <input type="text" id="province3" placeholder="Nama Provinsi" style="width: calc(100% - 16px); margin-top: 8px;">
                     <div style="text-align: center; margin-top: 15px;">
                         <button type="button" class="btn-gps" onclick="getGPSLocation(3)">📍 GPS</button>
-                        <button type="button" class="btn-location" onclick="saveManualLocation(3)">💾 Simpan</button>
+                        <button type="button" class="btn-location" onclick="saveLocationWithWatermark(3)">💾 Watermark</button>
                     </div>
                 </div>
                 <div id="locationInfo3" class="location-info hidden"></div>
@@ -538,14 +650,24 @@
                 <input type="file" id="photo4" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 4)">
                 <div class="preview-container">
                     <img id="preview4" class="preview-image hidden">
+                    <div id="watermark4" class="watermark-overlay hidden">
+                        <canvas class="pin-icon" width="24" height="24"></canvas>
+                        <div class="watermark-content">
+                            <div class="coordinate-text"></div>
+                            <div class="datetime-text"></div>
+                            <div class="location-text"></div>
+                        </div>
+                    </div>
                 </div>
                 <div id="photoStatus4" class="photo-status hidden"></div>
                 <div id="locationInput4" class="location-input hidden">
                     <input type="text" id="lat4" placeholder="Latitude" pattern="-?\d+\.?\d*">
                     <input type="text" id="lng4" placeholder="Longitude" pattern="-?\d+\.?\d*">
+                    <input type="text" id="city4" placeholder="Nama Kota/Kabupaten" style="width: calc(100% - 16px); margin-top: 8px;">
+                    <input type="text" id="province4" placeholder="Nama Provinsi" style="width: calc(100% - 16px); margin-top: 8px;">
                     <div style="text-align: center; margin-top: 15px;">
                         <button type="button" class="btn-gps" onclick="getGPSLocation(4)">📍 GPS</button>
-                        <button type="button" class="btn-location" onclick="saveManualLocation(4)">💾 Simpan</button>
+                        <button type="button" class="btn-location" onclick="saveLocationWithWatermark(4)">💾 Watermark</button>
                     </div>
                 </div>
                 <div id="locationInfo4" class="location-info hidden"></div>
@@ -565,14 +687,24 @@
                 <input type="file" id="photo5" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 5)">
                 <div class="preview-container">
                     <img id="preview5" class="preview-image hidden">
+                    <div id="watermark5" class="watermark-overlay hidden">
+                        <canvas class="pin-icon" width="24" height="24"></canvas>
+                        <div class="watermark-content">
+                            <div class="coordinate-text"></div>
+                            <div class="datetime-text"></div>
+                            <div class="location-text"></div>
+                        </div>
+                    </div>
                 </div>
                 <div id="photoStatus5" class="photo-status hidden"></div>
                 <div id="locationInput5" class="location-input hidden">
                     <input type="text" id="lat5" placeholder="Latitude" pattern="-?\d+\.?\d*">
                     <input type="text" id="lng5" placeholder="Longitude" pattern="-?\d+\.?\d*">
+                    <input type="text" id="city5" placeholder="Nama Kota/Kabupaten" style="width: calc(100% - 16px); margin-top: 8px;">
+                    <input type="text" id="province5" placeholder="Nama Provinsi" style="width: calc(100% - 16px); margin-top: 8px;">
                     <div style="text-align: center; margin-top: 15px;">
                         <button type="button" class="btn-gps" onclick="getGPSLocation(5)">📍 GPS</button>
-                        <button type="button" class="btn-location" onclick="saveManualLocation(5)">💾 Simpan</button>
+                        <button type="button" class="btn-location" onclick="saveLocationWithWatermark(5)">💾 Watermark</button>
                     </div>
                 </div>
                 <div id="locationInfo5" class="location-info hidden"></div>
@@ -599,14 +731,24 @@
                 <input type="file" id="photo6" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 6)">
                 <div class="preview-container">
                     <img id="preview6" class="preview-image hidden">
+                    <div id="watermark6" class="watermark-overlay hidden">
+                        <canvas class="pin-icon" width="24" height="24"></canvas>
+                        <div class="watermark-content">
+                            <div class="coordinate-text"></div>
+                            <div class="datetime-text"></div>
+                            <div class="location-text"></div>
+                        </div>
+                    </div>
                 </div>
                 <div id="photoStatus6" class="photo-status hidden"></div>
                 <div id="locationInput6" class="location-input hidden">
                     <input type="text" id="lat6" placeholder="Latitude" pattern="-?\d+\.?\d*">
                     <input type="text" id="lng6" placeholder="Longitude" pattern="-?\d+\.?\d*">
+                    <input type="text" id="city6" placeholder="Nama Kota/Kabupaten" style="width: calc(100% - 16px); margin-top: 8px;">
+                    <input type="text" id="province6" placeholder="Nama Provinsi" style="width: calc(100% - 16px); margin-top: 8px;">
                     <div style="text-align: center; margin-top: 15px;">
                         <button type="button" class="btn-gps" onclick="getGPSLocation(6)">📍 GPS</button>
-                        <button type="button" class="btn-location" onclick="saveManualLocation(6)">💾 Simpan</button>
+                        <button type="button" class="btn-location" onclick="saveLocationWithWatermark(6)">💾 Watermark</button>
                     </div>
                 </div>
                 <div id="locationInfo6" class="location-info hidden"></div>
@@ -687,7 +829,7 @@
         <footer>
             <p>© 2023 - Sistem Dokumentasi Instalasi Perangkat Sekolah</p>
             <p style="margin-top: 10px; font-size: 12px; opacity: 0.7;">
-                🛠️ Dilengkapi dengan Manual Location Input & Auto-Scan BAPP
+                🛠️ Dilengkapi dengan Watermark Transparan & Auto-Scan BAPP
             </p>
         </footer>
     </div>
@@ -710,6 +852,41 @@
             7: "7_bapp_halaman1.jpg",
             8: "8_bapp_halaman2.jpg"
         };
+
+        // Fungsi untuk menggambar pin Google Maps
+        function drawGoogleMapsPin(ctx, size) {
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const circleRadius = size * 0.3;
+            const triangleHeight = size * 0.4;
+            
+            // Lingkaran merah (badan pin)
+            ctx.fillStyle = '#ea4335';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY - triangleHeight * 0.2, circleRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Segitiga merah (ujung pin)
+            ctx.beginPath();
+            ctx.moveTo(centerX - circleRadius * 0.8, centerY - triangleHeight * 0.2);
+            ctx.lineTo(centerX + circleRadius * 0.8, centerY - triangleHeight * 0.2);
+            ctx.lineTo(centerX, centerY + triangleHeight * 0.8);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Titik putih di tengah
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY - triangleHeight * 0.2, circleRadius * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Inisialisasi contoh pin
+        document.addEventListener('DOMContentLoaded', function() {
+            const exampleCanvas = document.getElementById('examplePin');
+            const ctx = exampleCanvas.getContext('2d');
+            drawGoogleMapsPin(ctx, 24);
+        });
 
         // Fungsi untuk memicu upload file
         function triggerUpload(inputId) {
@@ -735,30 +912,10 @@
                 preview.src = e.target.result;
                 preview.classList.remove('hidden');
 
-                // Update status foto
-                updatePhotoStatus(stepNumber, '📷 Foto sudah diambil', '#27ae60');
-
-                // Simpan foto
-                photoData.photos[stepNumber] = {
-                    dataUrl: e.target.result,
-                    file: file,
-                    location: null,
-                    fileName: photoNames[stepNumber],
-                    needsLocation: true,
-                    type: 'photo'
-                };
-
-                // Tampilkan input lokasi manual
-                showManualLocationInput(stepNumber);
-                
-                showStatus(`✅ Foto ${stepNumber} berhasil diambil. Silakan tambahkan lokasi.`, 'success');
-            };
-            
-            reader.onload = function(e) {
-                // Tampilkan preview
-                const preview = document.getElementById('preview' + stepNumber);
-                preview.src = e.target.result;
-                preview.classList.remove('hidden');
+                // Gambar pin pada watermark
+                const pinCanvas = document.querySelector('#watermark' + stepNumber + ' .pin-icon');
+                const pinCtx = pinCanvas.getContext('2d');
+                drawGoogleMapsPin(pinCtx, 24);
 
                 // Update status foto
                 updatePhotoStatus(stepNumber, '📷 Foto sudah diambil', '#27ae60');
@@ -879,7 +1036,7 @@
                     document.getElementById('lat' + stepNumber).value = location.lat.toFixed(6);
                     document.getElementById('lng' + stepNumber).value = location.lng.toFixed(6);
                     
-                    showStatus('📍 Lokasi GPS berhasil didapatkan! Klik "Simpan Lokasi"', 'success');
+                    showStatus('📍 Lokasi GPS berhasil didapatkan! Klik "Watermark"', 'success');
                 },
                 function(error) {
                     let errorMessage = '❌ Gagal mendapatkan lokasi GPS. ';
@@ -905,16 +1062,25 @@
             );
         }
 
-        // Fungsi untuk menyimpan lokasi manual
-        function saveManualLocation(stepNumber) {
+        // Fungsi untuk menyimpan lokasi dengan watermark
+        function saveLocationWithWatermark(stepNumber) {
             const latInput = document.getElementById('lat' + stepNumber);
             const lngInput = document.getElementById('lng' + stepNumber);
+            const cityInput = document.getElementById('city' + stepNumber);
+            const provinceInput = document.getElementById('province' + stepNumber);
             
             const lat = parseFloat(latInput.value);
             const lng = parseFloat(lngInput.value);
+            const city = cityInput.value.trim();
+            const province = provinceInput.value.trim();
             
             if (isNaN(lat) || isNaN(lng)) {
                 showStatus('❌ Harap masukkan koordinat yang valid! Contoh: -6.2088 dan 106.8456', 'error');
+                return;
+            }
+
+            if (!city || !province) {
+                showStatus('❌ Harap masukkan nama kota dan provinsi!', 'error');
                 return;
             }
 
@@ -927,6 +1093,8 @@
             const location = {
                 lat: lat,
                 lng: lng,
+                city: city,
+                province: province,
                 timestamp: new Date().toISOString(),
                 source: 'manual'
             };
@@ -939,23 +1107,42 @@
                 // Sembunyikan input lokasi
                 document.getElementById('locationInput' + stepNumber).classList.add('hidden');
 
+                // Tampilkan watermark pada preview
+                showWatermark(stepNumber, location);
+
                 // Tampilkan info lokasi
                 const locationInfo = document.getElementById('locationInfo' + stepNumber);
                 const date = new Date(location.timestamp);
                 locationInfo.innerHTML = `
-                    <strong>📍 Lokasi Manual Tersimpan:</strong><br>
-                    <strong>Latitude:</strong> ${location.lat.toFixed(6)}<br>
-                    <strong>Longitude:</strong> ${location.lng.toFixed(6)}<br>
+                    <strong>📍 Watermark Transparan Berhasil Ditambahkan:</strong><br>
+                    <strong>Koordinat:</strong> ${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}<br>
+                    <strong>Lokasi:</strong> ${location.city}, ${location.province}<br>
                     <strong>Waktu:</strong> ${date.toLocaleString('id-ID')}<br>
                     <strong>Google Maps:</strong> <a href="https://maps.google.com/?q=${location.lat},${location.lng}" target="_blank">Buka di Maps</a>
                 `;
                 locationInfo.classList.remove('hidden');
 
                 // Update status foto
-                updatePhotoStatus(stepNumber, '✅ Foto dan lokasi tersimpan', '#27ae60');
+                updatePhotoStatus(stepNumber, '✅ Foto dengan watermark transparan tersimpan', '#27ae60');
 
-                showStatus(`✅ Lokasi manual berhasil disimpan untuk foto ${stepNumber}!`, 'success');
+                showStatus(`✅ Watermark transparan berhasil ditambahkan ke foto ${stepNumber}!`, 'success');
             }
+        }
+
+        // Fungsi untuk menampilkan watermark pada foto
+        function showWatermark(stepNumber, location) {
+            const watermarkElement = document.getElementById('watermark' + stepNumber);
+            const coordinateElement = watermarkElement.querySelector('.coordinate-text');
+            const datetimeElement = watermarkElement.querySelector('.datetime-text');
+            const locationElement = watermarkElement.querySelector('.location-text');
+            
+            const date = new Date(location.timestamp);
+            
+            coordinateElement.textContent = `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`;
+            datetimeElement.textContent = `${date.toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'})} ${date.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}`;
+            locationElement.textContent = `${location.city}, ${location.province}`;
+            
+            watermarkElement.classList.remove('hidden');
         }
 
         // Fungsi untuk reset form
@@ -968,6 +1155,7 @@
                 for (let i = 1; i <= 8; i++) {
                     document.getElementById('preview' + i).classList.add('hidden');
                     document.getElementById('photoStatus' + i).classList.add('hidden');
+                    document.getElementById('watermark' + i).classList.add('hidden');
                     const locationInfo = document.getElementById('locationInfo' + i);
                     if (locationInfo) locationInfo.classList.add('hidden');
                     const locationInput = document.getElementById('locationInput' + i);
@@ -986,6 +1174,133 @@
 
                 showStatus('🔄 Semua data telah direset!', 'info');
             }
+        }
+
+        // Fungsi untuk membuat foto dengan watermark transparan
+        function createPhotoWithTransparentWatermark(photoData, stepNumber) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Set canvas size sama dengan foto
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    // Draw foto asli
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // Tambahkan watermark transparan
+                    const location = photoData.location;
+                    const date = new Date(location.timestamp);
+                    
+                    // Hitung ukuran dinamis berdasarkan tinggi foto
+                    const BASE_HEIGHT = 800;
+                    const scaleFactor = canvas.height / BASE_HEIGHT;
+                    const FONT_SIZE_COORD = Math.max(16, 20 * scaleFactor);
+                    const FONT_SIZE_DATETIME = Math.max(12, 14 * scaleFactor);
+                    const FONT_SIZE_LOCATION = Math.max(12, 14 * scaleFactor);
+                    const PADDING = Math.max(15, 20 * scaleFactor);
+                    const PIN_SIZE = Math.max(24, 30 * scaleFactor);
+                    const MARGIN = Math.max(20, 25 * scaleFactor);
+                    
+                    const coordinateText = `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`;
+                    const dateTimeText = `${date.toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'})} ${date.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}`;
+                    const locationText = `${location.city}, ${location.province}`;
+                    
+                    // Hitung lebar teks
+                    ctx.font = `600 ${FONT_SIZE_COORD}px Arial`;
+                    const coordWidth = ctx.measureText(coordinateText).width;
+                    
+                    ctx.font = `400 ${FONT_SIZE_DATETIME}px Arial`;
+                    const datetimeWidth = ctx.measureText(dateTimeText).width;
+                    
+                    ctx.font = `500 ${FONT_SIZE_LOCATION}px Arial`;
+                    const locationWidth = ctx.measureText(locationText).width;
+                    
+                    const textWidth = Math.max(coordWidth, datetimeWidth, locationWidth);
+                    const totalWidth = PIN_SIZE + PADDING * 2 + textWidth + PADDING;
+                    const totalHeight = PADDING * 2 + FONT_SIZE_COORD + FONT_SIZE_DATETIME + FONT_SIZE_LOCATION + 8;
+                    
+                    const x = MARGIN;
+                    const y = canvas.height - totalHeight - MARGIN;
+                    
+                    // Background transparan dengan efek glassmorphism
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, totalWidth, totalHeight, 12 * scaleFactor);
+                    ctx.fill();
+                    
+                    // Border subtle
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    
+                    // Gambar pin Google Maps
+                    const pinX = x + PADDING + PIN_SIZE / 2;
+                    const pinY = y + totalHeight / 2;
+                    drawGoogleMapsPin(ctx, PIN_SIZE, pinX, pinY);
+                    
+                    // Teks koordinat (putih dengan shadow)
+                    ctx.font = `600 ${FONT_SIZE_COORD}px Arial`;
+                    ctx.fillStyle = 'white';
+                    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+                    ctx.shadowBlur = 2;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 1;
+                    ctx.fillText(coordinateText, x + PADDING + PIN_SIZE + PADDING, y + PADDING + FONT_SIZE_COORD);
+                    
+                    // Teks tanggal dan waktu
+                    ctx.font = `400 ${FONT_SIZE_DATETIME}px Arial`;
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    ctx.fillText(dateTimeText, x + PADDING + PIN_SIZE + PADDING, y + PADDING + FONT_SIZE_COORD + FONT_SIZE_DATETIME + 4);
+                    
+                    // Teks lokasi
+                    ctx.font = `500 ${FONT_SIZE_LOCATION}px Arial`;
+                    ctx.fillStyle = '#a8d8ff';
+                    ctx.fillText(locationText, x + PADDING + PIN_SIZE + PADDING, y + PADDING + FONT_SIZE_COORD + FONT_SIZE_DATETIME + FONT_SIZE_LOCATION + 8);
+                    
+                    // Reset shadow
+                    ctx.shadowColor = 'transparent';
+                    ctx.shadowBlur = 0;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 0;
+                    
+                    // Convert ke data URL
+                    const watermarkedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                    resolve(watermarkedDataUrl);
+                };
+                img.src = photoData.dataUrl;
+            });
+        }
+
+        // Overload fungsi drawGoogleMapsPin untuk koordinat custom
+        function drawGoogleMapsPin(ctx, size, x, y) {
+            const centerX = x || size / 2;
+            const centerY = y || size / 2;
+            const circleRadius = size * 0.3;
+            const triangleHeight = size * 0.4;
+            
+            // Lingkaran merah (badan pin)
+            ctx.fillStyle = '#ea4335';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY - triangleHeight * 0.2, circleRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Segitiga merah (ujung pin)
+            ctx.beginPath();
+            ctx.moveTo(centerX - circleRadius * 0.8, centerY - triangleHeight * 0.2);
+            ctx.lineTo(centerX + circleRadius * 0.8, centerY - triangleHeight * 0.2);
+            ctx.lineTo(centerX, centerY + triangleHeight * 0.8);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Titik putih di tengah
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY - triangleHeight * 0.2, circleRadius * 0.3, 0, Math.PI * 2);
+            ctx.fill();
         }
 
         // Fungsi untuk mendownload semua foto sebagai ZIP
@@ -1027,79 +1342,90 @@
             const folderName = schoolName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
 
             try {
-                showStatus('📦 Membuat file ZIP...', 'info');
+                showStatus('📦 Membuat file ZIP dengan watermark transparan...', 'info');
                 
                 const zip = new JSZip();
                 const folder = zip.folder(folderName);
 
-                // Tambahkan setiap foto ke ZIP
+                // Tambahkan setiap foto ke ZIP (dengan watermark untuk foto 1-6)
                 for (const [step, data] of Object.entries(photoData.photos)) {
-                    // Konversi data URL ke blob
-                    const response = await fetch(data.dataUrl);
-                    const blob = await response.blob();
+                    let photoBlob;
+                    
+                    if (data.type === 'photo' && data.location) {
+                        // Buat foto dengan watermark transparan
+                        const watermarkedDataUrl = await createPhotoWithTransparentWatermark(data, step);
+                        const response = await fetch(watermarkedDataUrl);
+                        photoBlob = await response.blob();
+                    } else {
+                        // Untuk BAPP, gunakan foto asli
+                        const response = await fetch(data.dataUrl);
+                        photoBlob = await response.blob();
+                    }
                     
                     // Tambahkan ke ZIP dengan nama yang sesuai
-                    folder.file(data.fileName, blob);
+                    folder.file(data.fileName, photoBlob);
                 }
 
-                // Buat file informasi lokasi
-                let locationInfo = `LAPORAN LOKASI INSTALASI\n`;
-                locationInfo += `========================\n\n`;
+                // Buat file informasi
+                let locationInfo = `LAPORAN INSTALASI DENGAN WATERMARK TRANSPARAN\n`;
+                locationInfo += `================================================\n\n`;
                 locationInfo += `Sekolah: ${schoolName}\n`;
                 locationInfo += `Tanggal: ${new Date().toLocaleDateString('id-ID')}\n`;
                 locationInfo += `Waktu: ${new Date().toLocaleTimeString('id-ID')}\n\n`;
                 
-                locationInfo += `LOKASI GEOGRAFIS:\n`;
-                locationInfo += `=================\n\n`;
+                locationInfo += `FOTO DENGAN WATERMARK TRANSPARAN:\n`;
+                locationInfo += `==================================\n\n`;
                 
                 for (let i = 1; i <= 6; i++) {
                     if (photoData.photos[i] && photoData.photos[i].location) {
                         const loc = photoData.photos[i].location;
-                        locationInfo += `Foto: ${photoNames[i]}\n`;
-                        locationInfo += `  Latitude: ${loc.lat.toFixed(6)}\n`;
-                        locationInfo += `  Longitude: ${loc.lng.toFixed(6)}\n`;
-                        locationInfo += `  Sumber: ${loc.source}\n`;
-                        locationInfo += `  Waktu: ${new Date(loc.timestamp).toLocaleString('id-ID')}\n`;
-                        locationInfo += `  Link Maps: https://maps.google.com/?q=${loc.lat},${loc.lng}\n\n`;
+                        locationInfo += `📍 ${photoNames[i]}\n`;
+                        locationInfo += `   📍 Koordinat: ${loc.lat.toFixed(6)}, ${loc.lng.toFixed(6)}\n`;
+                        locationInfo += `   🏙️ Lokasi: ${loc.city}, ${loc.province}\n`;
+                        locationInfo += `   🕒 Waktu: ${new Date(loc.timestamp).toLocaleString('id-ID')}\n`;
+                        locationInfo += `   🔗 Maps: https://maps.google.com/?q=${loc.lat},${loc.lng}\n\n`;
                     }
                 }
 
-                locationInfo += `INFORMASI BAPP:\n`;
-                locationInfo += `===============\n\n`;
+                locationInfo += `DOKUMEN BAPP:\n`;
+                locationInfo += `=============\n\n`;
                 for (let i = 7; i <= 8; i++) {
                     if (photoData.photos[i]) {
-                        locationInfo += `Dokumen: ${photoNames[i]}\n`;
-                        locationInfo += `  Status: Tervalidasi (Auto-Scan)\n`;
-                        locationInfo += `  Waktu Scan: ${new Date(photoData.photos[i].scanTime).toLocaleString('id-ID')}\n\n`;
+                        locationInfo += `📄 ${photoNames[i]}\n`;
+                        locationInfo += `   ✅ Status: Tervalidasi Auto-Scan\n`;
+                        locationInfo += `   🕒 Waktu Scan: ${new Date(photoData.photos[i].scanTime).toLocaleString('id-ID')}\n\n`;
                     }
                 }
 
-                folder.file('INFORMASI_LOKASI_DAN_BAPP.txt', locationInfo);
+                folder.file('INFORMASI_LENGKAP.txt', locationInfo);
 
                 // Generate dan download ZIP
                 const zipBlob = await zip.generateAsync({ type: 'blob' });
-                const zipFileName = `${folderName}_LAPORAN_INSTALASI.zip`;
+                const zipFileName = `${folderName}_LAPORAN_TRANSPARAN.zip`;
                 
                 saveAs(zipBlob, zipFileName);
                 
-                showStatus(`✅ File ZIP "${zipFileName}" berhasil didownload!`, 'success');
+                showStatus(`✅ File ZIP "${zipFileName}" berhasil didownload! Semua foto sudah ada watermark transparan elegan.`, 'success');
                 
                 // Tampilkan info folder
                 document.getElementById('folderInfo').innerHTML = `
-                    <h3>📁 File Berhasil Dibuat!</h3>
+                    <h3>📁 File Berhasil Dibuat dengan Watermark Transparan!</h3>
                     <p><strong>Nama File:</strong> ${zipFileName}</p>
                     <p><strong>Folder:</strong> ${folderName}/</p>
                     <div style="margin-top: 15px; background: white; padding: 15px; border-radius: 10px;">
                         <strong>📋 Isi File ZIP:</strong>
                         <div style="font-family: monospace; font-size: 12px; margin-top: 10px;">
-                            ${Object.values(photoNames).map(name => `📄 ${name}`).join('<br>')}
-                            <br>📝 INFORMASI_LOKASI_DAN_BAPP.txt
+                            ${Object.values(photoNames).map((name, index) => 
+                                index < 6 ? `📍 ${name} (watermark transparan)` : `📄 ${name}`
+                            ).join('<br>')}
+                            <br>📝 INFORMASI_LENGKAP.txt
                         </div>
                     </div>
                     <p style="margin-top: 15px; font-size: 14px; color: #666;">
-                        ✅ Foto 1-6 dilengkapi data lokasi<br>
-                        📄 Foto 7-8 sudah di-scan sebagai BAPP<br>
-                        📍 Semua koordinat tersimpan dalam file informasi
+                        ✅ <strong>Foto 1-6</strong> sudah dilengkapi watermark transparan elegan<br>
+                        📍 <strong>Pin merah</strong> dengan efek glassmorphism modern<br>
+                        📄 <strong>Foto 7-8</strong> adalah dokumen BAPP yang sudah di-scan<br>
+                        🌐 Semua koordinat dapat dibuka langsung di Google Maps
                     </p>
                 `;
                 document.getElementById('folderInfo').classList.remove('hidden');
