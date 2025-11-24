@@ -188,7 +188,7 @@
         }
         
         .hidden {
-            display: none;
+            display: none !important;
         }
         
         .preview-container {
@@ -984,24 +984,26 @@
                 </button>
             </div>
             
-            <!-- Tombol WhatsApp akan ditampilkan setelah download berhasil -->
-            <button id="whatsappButton" class="btn-whatsapp hidden" onclick="sendToWhatsApp()">
-                📱 Kirim ke WhatsApp Admin
-            </button>
-            
-            <div id="whatsappInfo" class="whatsapp-info hidden">
-                <h3>📋 Petunjuk Pengiriman ke WhatsApp</h3>
-                <p><strong>Format Pesan:</strong> NPSN: [NPSN Anda] - Laporan Instalasi Selesai</p>
-                <div class="whatsapp-steps">
-                    <strong>Langkah-langkah:</strong>
-                    <ol>
-                        <li>Klik tombol "Kirim ke WhatsApp Admin" di atas</li>
-                        <li>WhatsApp akan terbuka dengan pesan yang sudah disiapkan</li>
-                        <li><strong>Lampirkan file ZIP</strong> yang sudah didownload</li>
-                        <li>Kirim pesan ke admin</li>
-                    </ol>
+            <!-- TOMBOL WHATSAPP YANG MUNCUL SETELAH DOWNLOAD -->
+            <div id="whatsapp-section" class="hidden">
+                <button id="whatsappButton" class="btn-whatsapp" onclick="sendToWhatsApp()">
+                    📱 Kirim ke WhatsApp Admin
+                </button>
+                
+                <div id="whatsappInfo" class="whatsapp-info">
+                    <h3>📋 Petunjuk Pengiriman ke WhatsApp</h3>
+                    <p><strong>Format Pesan:</strong> NPSN: [NPSN Anda] - Laporan Instalasi Selesai</p>
+                    <div class="whatsapp-steps">
+                        <strong>Langkah-langkah:</strong>
+                        <ol>
+                            <li>Klik tombol "Kirim ke WhatsApp Admin" di atas</li>
+                            <li>WhatsApp akan terbuka dengan pesan yang sudah disiapkan</li>
+                            <li><strong>Lampirkan file ZIP</strong> yang sudah didownload</li>
+                            <li>Kirim pesan ke admin</li>
+                        </ol>
+                    </div>
+                    <p><strong>Pastikan file ZIP sudah didownload sebelum mengirim!</strong></p>
                 </div>
-                <p><strong>Pastikan file ZIP sudah didownload sebelum mengirim!</strong></p>
             </div>
             
             <div id="statusMessage" class="status-message hidden"></div>
@@ -1077,6 +1079,9 @@
             const exampleCanvas = document.getElementById('examplePin');
             const ctx = exampleCanvas.getContext('2d');
             drawGoogleMapsPin(ctx, 24);
+            
+            // Pastikan tombol WhatsApp tersembunyi saat halaman dimuat
+            document.getElementById('whatsapp-section').classList.add('hidden');
         });
 
         // Fungsi untuk menyimpan alamat sekolah
@@ -1400,8 +1405,7 @@
                 }
                 
                 // Sembunyikan tombol WhatsApp dan info
-                document.getElementById('whatsappButton').classList.add('hidden');
-                document.getElementById('whatsappInfo').classList.add('hidden');
+                document.getElementById('whatsapp-section').classList.add('hidden');
                 
                 // Sembunyikan pesan status
                 document.getElementById('statusMessage').classList.add('hidden');
@@ -1702,19 +1706,18 @@
 
         // FUNGSI BARU: Menampilkan tombol WhatsApp setelah download selesai
         function showWhatsAppButton() {
+            const whatsappSection = document.getElementById('whatsapp-section');
             const whatsappButton = document.getElementById('whatsappButton');
-            const whatsappInfo = document.getElementById('whatsappInfo');
             
-            // Tampilkan tombol WhatsApp
-            whatsappButton.classList.remove('hidden');
-            whatsappInfo.classList.remove('hidden');
+            // Tampilkan section WhatsApp
+            whatsappSection.classList.remove('hidden');
             
             // Tambahkan efek animasi
             whatsappButton.classList.add('pulse');
             
             // Scroll ke tombol WhatsApp
             setTimeout(() => {
-                whatsappButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                whatsappSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 500);
             
             showStatus('📱 Tombol WhatsApp sudah tersedia! Silakan kirim file ZIP ke admin.', 'success');
