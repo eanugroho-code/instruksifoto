@@ -146,18 +146,24 @@
             padding-left: 10px;
         }
         
-        .upload-area {
+        .upload-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .upload-option {
+            flex: 1;
             border: 3px dashed #3498db;
             border-radius: 12px;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
-            margin-top: 20px;
             background: #f8f9fa;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         
-        .upload-area:hover {
+        .upload-option:hover {
             background: #e3f2fd;
             border-color: #2980b9;
             transform: scale(1.02);
@@ -500,6 +506,10 @@
             .address-container textarea {
                 grid-column: span 1;
             }
+            
+            .upload-options {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -553,12 +563,19 @@
                     <small>Watermark transparan akan muncul di pojok kiri bawah foto dengan efek glassmorphism</small>
                 </div>
                 
-                <div class="upload-area" onclick="triggerUpload('photo1')">
-                    <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">Format: JPG/PNG • Watermark transparan elegan</div>
+                <div class="upload-options">
+                    <div class="upload-option" onclick="triggerCamera('photo1')">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Ambil Foto</div>
+                        <div class="upload-hint">Gunakan kamera</div>
+                    </div>
+                    <div class="upload-option" onclick="triggerGallery('photo1')">
+                        <div class="upload-icon">🖼️</div>
+                        <div class="upload-text">Pilih dari Galeri</div>
+                        <div class="upload-hint">Pilih foto yang sudah ada</div>
+                    </div>
                 </div>
-                <input type="file" id="photo1" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 1)">
+                <input type="file" id="photo1" class="hidden" accept="image/*" onchange="processPhoto(this, 1)">
                 
                 <div class="preview-container">
                     <img id="preview1" class="preview-image hidden">
@@ -604,12 +621,19 @@
                 </div>
                 <p>Ambil foto PIC (Person In Charge) bersama dengan dus perangkat.</p>
                 
-                <div class="upload-area" onclick="triggerUpload('photo2')">
-                    <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">Wajib menunjukkan wajah PIC dan dus perangkat</div>
+                <div class="upload-options">
+                    <div class="upload-option" onclick="triggerCamera('photo2')">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Ambil Foto</div>
+                        <div class="upload-hint">Gunakan kamera</div>
+                    </div>
+                    <div class="upload-option" onclick="triggerGallery('photo2')">
+                        <div class="upload-icon">🖼️</div>
+                        <div class="upload-text">Pilih dari Galeri</div>
+                        <div class="upload-hint">Pilih foto yang sudah ada</div>
+                    </div>
                 </div>
-                <input type="file" id="photo2" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 2)">
+                <input type="file" id="photo2" class="hidden" accept="image/*" onchange="processPhoto(this, 2)">
                 
                 <div class="preview-container">
                     <img id="preview2" class="preview-image hidden">
@@ -650,12 +674,19 @@
                         <li>2 Pen + 1 Buku panduan + 1 Buku garansi</li>
                     </ul>
                 </div>
-                <div class="upload-area" onclick="triggerUpload('photo3')">
-                    <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">Pastikan semua item terlihat jelas</div>
+                <div class="upload-options">
+                    <div class="upload-option" onclick="triggerCamera('photo3')">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Ambil Foto</div>
+                        <div class="upload-hint">Gunakan kamera</div>
+                    </div>
+                    <div class="upload-option" onclick="triggerGallery('photo3')">
+                        <div class="upload-icon">🖼️</div>
+                        <div class="upload-text">Pilih dari Galeri</div>
+                        <div class="upload-hint">Pilih foto yang sudah ada</div>
+                    </div>
                 </div>
-                <input type="file" id="photo3" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 3)">
+                <input type="file" id="photo3" class="hidden" accept="image/*" onchange="processPhoto(this, 3)">
                 <div class="preview-container">
                     <img id="preview3" class="preview-image hidden">
                     <div id="watermark3" class="watermark-overlay hidden">
@@ -686,12 +717,19 @@
                     <h2>🔧 Foto Proses Instalasi</h2>
                 </div>
                 <p>Dokumentasikan proses instalasi atau pemasangan perangkat.</p>
-                <div class="upload-area" onclick="triggerUpload('photo4')">
-                    <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">Tunjukkan proses pemasangan sedang berlangsung</div>
+                <div class="upload-options">
+                    <div class="upload-option" onclick="triggerCamera('photo4')">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Ambil Foto</div>
+                        <div class="upload-hint">Gunakan kamera</div>
+                    </div>
+                    <div class="upload-option" onclick="triggerGallery('photo4')">
+                        <div class="upload-icon">🖼️</div>
+                        <div class="upload-text">Pilih dari Galeri</div>
+                        <div class="upload-hint">Pilih foto yang sudah ada</div>
+                    </div>
                 </div>
-                <input type="file" id="photo4" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 4)">
+                <input type="file" id="photo4" class="hidden" accept="image/*" onchange="processPhoto(this, 4)">
                 <div class="preview-container">
                     <img id="preview4" class="preview-image hidden">
                     <div id="watermark4" class="watermark-overlay hidden">
@@ -721,12 +759,19 @@
                     <h2>🔢 Foto IMEI / SN</h2>
                 </div>
                 <p>Ambil foto IMEI atau Serial Number di belakang TV.</p>
-                <div class="upload-area" onclick="triggerUpload('photo5')">
-                    <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">Pastikan IMEI/SN terbaca dengan jelas</div>
+                <div class="upload-options">
+                    <div class="upload-option" onclick="triggerCamera('photo5')">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Ambil Foto</div>
+                        <div class="upload-hint">Gunakan kamera</div>
+                    </div>
+                    <div class="upload-option" onclick="triggerGallery('photo5')">
+                        <div class="upload-icon">🖼️</div>
+                        <div class="upload-text">Pilih dari Galeri</div>
+                        <div class="upload-hint">Pilih foto yang sudah ada</div>
+                    </div>
                 </div>
-                <input type="file" id="photo5" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 5)">
+                <input type="file" id="photo5" class="hidden" accept="image/*" onchange="processPhoto(this, 5)">
                 <div class="preview-container">
                     <img id="preview5" class="preview-image hidden">
                     <div id="watermark5" class="watermark-overlay hidden">
@@ -763,12 +808,19 @@
                         <li>Terlihat di semua direktorat</li>
                     </ul>
                 </div>
-                <div class="upload-area" onclick="triggerUpload('photo6')">
-                    <div class="upload-icon">📷</div>
-                    <div class="upload-text">Klik untuk Mengambil Foto</div>
-                    <div class="upload-hint">Tunjukkan sesi training aktif</div>
+                <div class="upload-options">
+                    <div class="upload-option" onclick="triggerCamera('photo6')">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Ambil Foto</div>
+                        <div class="upload-hint">Gunakan kamera</div>
+                    </div>
+                    <div class="upload-option" onclick="triggerGallery('photo6')">
+                        <div class="upload-icon">🖼️</div>
+                        <div class="upload-text">Pilih dari Galeri</div>
+                        <div class="upload-hint">Pilih foto yang sudah ada</div>
+                    </div>
                 </div>
-                <input type="file" id="photo6" class="hidden" accept="image/*" capture="environment" onchange="processPhoto(this, 6)">
+                <input type="file" id="photo6" class="hidden" accept="image/*" onchange="processPhoto(this, 6)">
                 <div class="preview-container">
                     <img id="preview6" class="preview-image hidden">
                     <div id="watermark6" class="watermark-overlay hidden">
@@ -810,12 +862,19 @@
                         <li>Stempel dan tanda tangan jelas</li>
                     </ul>
                 </div>
-                <div class="upload-area" onclick="triggerUpload('photo7')">
-                    <div class="upload-icon">📄</div>
-                    <div class="upload-text">Klik untuk Scan BAPP Halaman 1</div>
-                    <div class="upload-hint">Auto-detect dokumen • Tanpa GPS</div>
+                <div class="upload-options">
+                    <div class="upload-option" onclick="triggerCamera('photo7')">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Ambil Foto</div>
+                        <div class="upload-hint">Gunakan kamera</div>
+                    </div>
+                    <div class="upload-option" onclick="triggerGallery('photo7')">
+                        <div class="upload-icon">🖼️</div>
+                        <div class="upload-text">Pilih dari Galeri</div>
+                        <div class="upload-hint">Pilih foto yang sudah ada</div>
+                    </div>
                 </div>
-                <input type="file" id="photo7" class="hidden" accept="image/*" capture="environment" onchange="processBAPPPhoto(this, 7)">
+                <input type="file" id="photo7" class="hidden" accept="image/*" onchange="processBAPPPhoto(this, 7)">
                 <div class="preview-container">
                     <img id="preview7" class="preview-image bapp-preview hidden">
                 </div>
@@ -839,12 +898,19 @@
                         <li>Coret "belum dapat diterima" dan "belum berada"</li>
                     </ul>
                 </div>
-                <div class="upload-area" onclick="triggerUpload('photo8')">
-                    <div class="upload-icon">📄</div>
-                    <div class="upload-text">Klik untuk Scan BAPP Halaman 2</div>
-                    <div class="upload-hint">Auto-detect dokumen • Tanpa GPS</div>
+                <div class="upload-options">
+                    <div class="upload-option" onclick="triggerCamera('photo8')">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Ambil Foto</div>
+                        <div class="upload-hint">Gunakan kamera</div>
+                    </div>
+                    <div class="upload-option" onclick="triggerGallery('photo8')">
+                        <div class="upload-icon">🖼️</div>
+                        <div class="upload-text">Pilih dari Galeri</div>
+                        <div class="upload-hint">Pilih foto yang sudah ada</div>
+                    </div>
                 </div>
-                <input type="file" id="photo8" class="hidden" accept="image/*" capture="environment" onchange="processBAPPPhoto(this, 8)">
+                <input type="file" id="photo8" class="hidden" accept="image/*" onchange="processBAPPPhoto(this, 8)">
                 <div class="preview-container">
                     <img id="preview8" class="preview-image bapp-preview hidden">
                 </div>
@@ -955,8 +1021,8 @@
             showStatus('✅ Alamat sekolah berhasil disimpan!', 'success');
         }
 
-        // Fungsi untuk memicu upload file
-        function triggerUpload(inputId) {
+        // Fungsi untuk memicu kamera
+        function triggerCamera(inputId) {
             // Cek apakah alamat sudah disimpan untuk foto yang memerlukan geotagging
             const stepNumber = parseInt(inputId.replace('photo', ''));
             if (stepNumber <= 6 && !photoData.addressSaved) {
@@ -965,7 +1031,27 @@
                 return;
             }
             
-            document.getElementById(inputId).click();
+            const input = document.getElementById(inputId);
+            // Set atribut untuk kamera
+            input.removeAttribute('capture');
+            input.setAttribute('capture', 'environment');
+            input.click();
+        }
+
+        // Fungsi untuk memicu galeri
+        function triggerGallery(inputId) {
+            // Cek apakah alamat sudah disimpan untuk foto yang memerlukan geotagging
+            const stepNumber = parseInt(inputId.replace('photo', ''));
+            if (stepNumber <= 6 && !photoData.addressSaved) {
+                showStatus('❌ Harap simpan alamat sekolah terlebih dahulu!', 'error');
+                document.getElementById('schoolName').focus();
+                return;
+            }
+            
+            const input = document.getElementById(inputId);
+            // Hapus atribut capture untuk galeri
+            input.removeAttribute('capture');
+            input.click();
         }
         
         // Fungsi untuk memproses foto biasa (dengan lokasi)
