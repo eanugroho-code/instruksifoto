@@ -332,11 +332,16 @@
             gap: 10px;
             margin-top: 20px;
             width: 100%;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
         }
 
         .btn-whatsapp:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-whatsapp:active {
+            transform: translateY(0);
         }
         
         .btn-location {
@@ -508,6 +513,17 @@
             margin: 15px 0;
             text-align: center;
             font-weight: 500;
+        }
+        
+        /* Animasi untuk tombol WhatsApp */
+        @keyframes pulseWhatsApp {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-whatsapp.pulse {
+            animation: pulseWhatsApp 2s infinite;
         }
         
         @media (max-width: 768px) {
@@ -1649,9 +1665,8 @@
                 
                 showStatus(`✅ File ZIP "${currentZipFileName}" berhasil didownload! Semua foto sudah ada watermark transparan elegan.`, 'success');
                 
-                // Tampilkan tombol WhatsApp dan petunjuk
-                document.getElementById('whatsappButton').classList.remove('hidden');
-                document.getElementById('whatsappInfo').classList.remove('hidden');
+                // TAMPILKAN TOMBOL WHATSAPP SETELAH DOWNLOAD SELESAI
+                showWhatsAppButton();
                 
                 // Tampilkan info folder
                 document.getElementById('folderInfo').innerHTML = `
@@ -1683,6 +1698,26 @@
             } catch (error) {
                 showStatus('❌ Error membuat file ZIP: ' + error.message, 'error');
             }
+        }
+
+        // FUNGSI BARU: Menampilkan tombol WhatsApp setelah download selesai
+        function showWhatsAppButton() {
+            const whatsappButton = document.getElementById('whatsappButton');
+            const whatsappInfo = document.getElementById('whatsappInfo');
+            
+            // Tampilkan tombol WhatsApp
+            whatsappButton.classList.remove('hidden');
+            whatsappInfo.classList.remove('hidden');
+            
+            // Tambahkan efek animasi
+            whatsappButton.classList.add('pulse');
+            
+            // Scroll ke tombol WhatsApp
+            setTimeout(() => {
+                whatsappButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 500);
+            
+            showStatus('📱 Tombol WhatsApp sudah tersedia! Silakan kirim file ZIP ke admin.', 'success');
         }
 
         // Fungsi untuk mengirim ke WhatsApp
