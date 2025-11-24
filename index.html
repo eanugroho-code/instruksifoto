@@ -316,6 +316,29 @@
             box-shadow: 0 8px 25px rgba(155, 89, 182, 0.3);
         }
         
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+        }
+        
         .btn-location {
             background: linear-gradient(135deg, #f39c12, #e67e22);
             color: white;
@@ -410,6 +433,25 @@
             padding: 15px;
             margin: 15px 0;
             border: 2px solid #90caf9;
+        }
+        
+        .whatsapp-info {
+            background: linear-gradient(135deg, #dcf8c6, #e2ffd9);
+            border: 2px solid #25D366;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .whatsapp-steps {
+            text-align: left;
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .whatsapp-steps li {
+            margin-bottom: 10px;
         }
         
         footer {
@@ -517,7 +559,7 @@
     <div class="container">
         <header>
             <h1>📋 Instruksi Kerja Pemasangan Perangkat</h1>
-            <p class="subtitle">Ambil dokumentasi</p>
+            <p class="subtitle">Ambil dokumentasi dan kirim ke WhatsApp Admin</p>
         </header>
         
         <form id="installationForm">
@@ -926,6 +968,26 @@
                 </button>
             </div>
             
+            <!-- Tombol WhatsApp akan ditampilkan setelah download berhasil -->
+            <button id="whatsappButton" class="btn-whatsapp hidden" onclick="sendToWhatsApp()">
+                📱 Kirim ke WhatsApp Admin
+            </button>
+            
+            <div id="whatsappInfo" class="whatsapp-info hidden">
+                <h3>📋 Petunjuk Pengiriman ke WhatsApp</h3>
+                <p><strong>Format Pesan:</strong> NPSN: [NPSN Anda] - Laporan Instalasi Selesai</p>
+                <div class="whatsapp-steps">
+                    <strong>Langkah-langkah:</strong>
+                    <ol>
+                        <li>Klik tombol "Kirim ke WhatsApp Admin" di atas</li>
+                        <li>WhatsApp akan terbuka dengan pesan yang sudah disiapkan</li>
+                        <li><strong>Lampirkan file ZIP</strong> yang sudah didownload</li>
+                        <li>Kirim pesan ke admin</li>
+                    </ol>
+                </div>
+                <p><strong>Pastikan file ZIP sudah didownload sebelum mengirim!</strong></p>
+            </div>
+            
             <div id="statusMessage" class="status-message hidden"></div>
             <div id="folderInfo" class="folder-info hidden"></div>
         </form>
@@ -949,6 +1011,10 @@
             addressSaved: false,
             photos: {}
         };
+
+        // Variabel global untuk menyimpan file ZIP yang telah dibuat
+        let currentZipFile = null;
+        let currentZipFileName = '';
 
         // Nama file untuk setiap langkah
         const photoNames = {
@@ -1317,6 +1383,10 @@
                     if (locationInput) locationInput.classList.add('hidden');
                 }
                 
+                // Sembunyikan tombol WhatsApp dan info
+                document.getElementById('whatsappButton').classList.add('hidden');
+                document.getElementById('whatsappInfo').classList.add('hidden');
+                
                 // Sembunyikan pesan status
                 document.getElementById('statusMessage').classList.add('hidden');
                 document.getElementById('folderInfo').classList.add('hidden');
@@ -1331,6 +1401,10 @@
                     addressSaved: false,
                     photos: {}
                 };
+                
+                // Reset file ZIP
+                currentZipFile = null;
+                currentZipFileName = '';
 
                 showStatus('🔄 Semua data telah direset!', 'info');
             }
@@ -1568,16 +1642,21 @@
 
                 // Generate dan download ZIP
                 const zipBlob = await zip.generateAsync({ type: 'blob' });
-                const zipFileName = `${folderName}_LAPORAN_TRANSPARAN.zip`;
+                currentZipFileName = `${folderName}_LAPORAN_TRANSPARAN.zip`;
+                currentZipFile = zipBlob;
                 
-                saveAs(zipBlob, zipFileName);
+                saveAs(zipBlob, currentZipFileName);
                 
-                showStatus(`✅ File ZIP "${zipFileName}" berhasil didownload! Semua foto sudah ada watermark transparan elegan.`, 'success');
+                showStatus(`✅ File ZIP "${currentZipFileName}" berhasil didownload! Semua foto sudah ada watermark transparan elegan.`, 'success');
+                
+                // Tampilkan tombol WhatsApp dan petunjuk
+                document.getElementById('whatsappButton').classList.remove('hidden');
+                document.getElementById('whatsappInfo').classList.remove('hidden');
                 
                 // Tampilkan info folder
                 document.getElementById('folderInfo').innerHTML = `
                     <h3>📁 File Berhasil Dibuat dengan Watermark Transparan!</h3>
-                    <p><strong>Nama File:</strong> ${zipFileName}</p>
+                    <p><strong>Nama File:</strong> ${currentZipFileName}</p>
                     <p><strong>Folder:</strong> ${folderName}/</p>
                     <div style="margin-top: 15px; background: white; padding: 15px; border-radius: 10px;">
                         <strong>📋 Isi File ZIP:</strong>
@@ -1595,12 +1674,44 @@
                         📄 <strong>Foto 7-8</strong> adalah dokumen BAPP yang sudah di-scan<br>
                         🌐 Semua koordinat dapat dibuka langsung di Google Maps
                     </p>
+                    <p style="margin-top: 15px; font-weight: bold; color: #25D366;">
+                        📱 Silakan kirim file ZIP ke WhatsApp Admin dengan menekan tombol di atas!
+                    </p>
                 `;
                 document.getElementById('folderInfo').classList.remove('hidden');
                 
             } catch (error) {
                 showStatus('❌ Error membuat file ZIP: ' + error.message, 'error');
             }
+        }
+
+        // Fungsi untuk mengirim ke WhatsApp
+        function sendToWhatsApp() {
+            const npsn = document.getElementById('schoolName').value.trim();
+            
+            if (!npsn) {
+                showStatus('❌ Harap masukkan NPSN terlebih dahulu!', 'error');
+                return;
+            }
+            
+            if (!currentZipFile) {
+                showStatus('❌ Tidak ada file ZIP yang tersedia. Silakan download terlebih dahulu.', 'error');
+                return;
+            }
+            
+            // Format pesan sesuai permintaan
+            const message = `NPSN: ${npsn} - Laporan Instalasi Selesai`;
+            
+            // Encode pesan untuk URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Buat URL WhatsApp
+            const whatsappUrl = `https://wa.me/6281383796300?text=${encodedMessage}`;
+            
+            // Buka WhatsApp di tab baru
+            window.open(whatsappUrl, '_blank');
+            
+            showStatus('✅ WhatsApp berhasil dibuka. Silakan lampirkan file ZIP dan kirim pesan.', 'success');
         }
 
         // Fungsi untuk menampilkan status
